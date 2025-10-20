@@ -1,0 +1,187 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+
+export default async function WebmasterDashboard() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/auth/signin");
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Welcome Section */}
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Welcome back, {session.user.name || "Webmaster"}!
+        </h1>
+        <p className="text-xl text-gray-600">
+          Your affiliate dashboard for casino gaming content
+        </p>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600">
+          <h3 className="text-gray-500 text-sm font-medium uppercase">
+            Available Casinos
+          </h3>
+          <p className="text-3xl font-bold text-gray-900 mt-2">50</p>
+          <p className="text-gray-600 text-sm mt-1">Casinos to promote</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-indigo-600">
+          <h3 className="text-gray-500 text-sm font-medium uppercase">
+            Games Available
+          </h3>
+          <p className="text-3xl font-bold text-gray-900 mt-2">200</p>
+          <p className="text-gray-600 text-sm mt-1">With demo play</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pink-600">
+          <h3 className="text-gray-500 text-sm font-medium uppercase">
+            Affiliate Programs
+          </h3>
+          <p className="text-3xl font-bold text-gray-900 mt-2">Active</p>
+          <p className="text-gray-600 text-sm mt-1">Ready to join</p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link
+          href="/webmaster/casinos"
+          className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+        >
+          <div className="text-4xl mb-4">🎰</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            Browse Casinos
+          </h3>
+          <p className="text-gray-600">
+            Explore approved casino brands and get affiliate links
+          </p>
+        </Link>
+
+        <Link
+          href="/webmaster/games"
+          className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+        >
+          <div className="text-4xl mb-4">🎮</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Demo Games</h3>
+          <p className="text-gray-600">Access 200+ slots with playable demos</p>
+        </Link>
+
+        <Link
+          href="/webmaster/affiliates"
+          className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+        >
+          <div className="text-4xl mb-4">💰</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">
+            Affiliate Programs
+          </h3>
+          <p className="text-gray-600">
+            Join casino affiliate programs and earn commissions
+          </p>
+        </Link>
+
+        <Link
+          href="/webmaster/profile"
+          className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+        >
+          <div className="text-4xl mb-4">👤</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">My Profile</h3>
+          <p className="text-gray-600">
+            Update your profile and contact information
+          </p>
+        </Link>
+
+        <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg shadow-md p-8 text-white">
+          <div className="text-4xl mb-4">📊</div>
+          <h3 className="text-xl font-bold mb-2">API Access</h3>
+          <p className="text-purple-100">
+            Get your API key to integrate casino data
+          </p>
+          <button className="mt-4 bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold hover:bg-purple-50 transition">
+            View API Docs
+          </button>
+        </div>
+
+        <div className="bg-gradient-to-br from-pink-600 to-rose-600 rounded-lg shadow-md p-8 text-white">
+          <div className="text-4xl mb-4">📚</div>
+          <h3 className="text-xl font-bold mb-2">Resources</h3>
+          <p className="text-pink-100">
+            Marketing materials, banners, and guides
+          </p>
+          <button className="mt-4 bg-white text-pink-600 px-4 py-2 rounded-lg font-semibold hover:bg-pink-50 transition">
+            Browse Resources
+          </button>
+        </div>
+      </div>
+
+      {/* Getting Started Guide */}
+      <div className="mt-12 bg-white rounded-lg shadow-md p-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Getting Started
+        </h2>
+        <div className="space-y-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 bg-purple-100 rounded-full w-8 h-8 flex items-center justify-center text-purple-600 font-bold mr-4">
+              1
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900">
+                Complete Your Profile
+              </h4>
+              <p className="text-gray-600">
+                Add your contact information and website details
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <div className="flex-shrink-0 bg-purple-100 rounded-full w-8 h-8 flex items-center justify-center text-purple-600 font-bold mr-4">
+              2
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900">
+                Browse Casinos & Games
+              </h4>
+              <p className="text-gray-600">
+                Explore our curated selection of casino brands and games
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <div className="flex-shrink-0 bg-purple-100 rounded-full w-8 h-8 flex items-center justify-center text-purple-600 font-bold mr-4">
+              3
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900">
+                Join Affiliate Programs
+              </h4>
+              <p className="text-gray-600">
+                Sign up for programs and start promoting
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start">
+            <div className="flex-shrink-0 bg-purple-100 rounded-full w-8 h-8 flex items-center justify-center text-purple-600 font-bold mr-4">
+              4
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900">
+                Integrate with API
+              </h4>
+              <p className="text-gray-600">
+                Use our API to display casino data on your website
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
