@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./lib/prisma";
-import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import type { Provider } from "next-auth/providers";
@@ -9,22 +8,12 @@ import type { Provider } from "next-auth/providers";
 // Build providers array conditionally
 const providers: Provider[] = [];
 
-// Add Resend if API key is available
+// Add Resend for email authentication
 if (process.env.RESEND_API_KEY) {
   providers.push(
     Resend({
       from: "noreply@allmediamatter.com",
       apiKey: process.env.RESEND_API_KEY,
-    })
-  );
-}
-
-// Add Email provider if server is configured
-if (process.env.EMAIL_SERVER && process.env.EMAIL_FROM) {
-  providers.push(
-    EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
     })
   );
 }
