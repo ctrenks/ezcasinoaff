@@ -102,30 +102,37 @@ export default function AffiliatesProgramList() {
             <h4 className="text-sm font-semibold text-gray-700 mb-3">
               Featured Casinos:
             </h4>
-            <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="space-y-2 mb-4">
               {affiliate.casinos.slice(0, 6).map((casino) => (
                 <div
                   key={casino.id}
-                  className="bg-gray-50 rounded p-2 flex items-center justify-center"
-                  title={casino.casino || ""}
+                  className="bg-gray-50 rounded-lg p-3 flex items-center gap-3 hover:bg-gray-100 transition"
                 >
-                  {casino.vercel_image_url || casino.homepageimage ? (
-                    <img
-                      src={
-                        casino.vercel_image_url || casino.homepageimage || ""
-                      }
-                      alt={casino.casino || "Casino"}
-                      className="max-h-8 max-w-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-lg">🎰</div>
-                  )}
+                  <div className="flex-shrink-0 w-16 h-12 bg-white rounded flex items-center justify-center p-1">
+                    {casino.vercel_image_url || casino.homepageimage ? (
+                      <img
+                        src={
+                          casino.vercel_image_url || casino.homepageimage || ""
+                        }
+                        alt={casino.casino || "Casino"}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    ) : (
+                      <div className="text-2xl">🎰</div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {casino.casino || "Unknown Casino"}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
             {affiliate.casinos.length > 6 && (
               <p className="text-xs text-gray-500 text-center">
-                +{affiliate.casinos.length - 6} more
+                +{affiliate.casinos.length - 6} more casino
+                {affiliate.casinos.length - 6 !== 1 ? "s" : ""}
               </p>
             )}
           </div>
