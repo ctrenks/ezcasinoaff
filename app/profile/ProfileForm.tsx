@@ -274,9 +274,15 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
       {/* API Key Section */}
       <div className="mt-8 bg-white shadow-md rounded-lg p-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">API Access</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          API Access
+          <span className="ml-2 text-sm font-normal bg-blue-100 text-blue-800 px-2 py-1 rounded">
+            Demo Key
+          </span>
+        </h2>
         <p className="text-gray-600 mb-4">
-          Your API key provides access to casino and game data for your website.
+          Your demo API key provides access to casino and game data for testing
+          purposes.
         </p>
 
         <div className="bg-gray-50 rounded-lg p-4 mb-4">
@@ -293,18 +299,36 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 void navigator.clipboard.writeText(user.apiKey || "");
                 setMessage("API key copied to clipboard!");
               }}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition"
+              disabled={!user.apiKey}
+              className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Copy
             </button>
           </div>
         </div>
 
-        <div className="text-sm text-gray-600">
-          <p className="mb-2">
-            <strong>Your access includes:</strong>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <h3 className="font-semibold text-blue-900 mb-2 flex items-center">
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Demo API Access
+          </h3>
+          <p className="text-sm text-blue-800 mb-2">
+            Your demo API key provides limited access for testing and
+            evaluation:
           </p>
-          <ul className="list-disc list-inside space-y-1 ml-4">
+          <ul className="list-disc list-inside space-y-1 ml-4 text-sm text-blue-800">
             <li>Up to 50 approved casino brands</li>
             <li>Up to 200 games with playable demos</li>
             <li>All active payment methods and software providers</li>
@@ -312,8 +336,31 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             <li>Jurisdiction and licensing information</li>
           </ul>
         </div>
+
+        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+          <h3 className="font-semibold text-purple-900 mb-2 flex items-center">
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+            Site Management (Coming Soon)
+          </h3>
+          <p className="text-sm text-purple-800">
+            Soon you'll be able to add and manage multiple sites, each with
+            their own API access and subscription level. Upgrade to a paid plan
+            for unlimited access and advanced features.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
-

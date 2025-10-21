@@ -4,6 +4,7 @@ import { prisma } from "./lib/prisma";
 import GoogleProvider from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import type { Provider } from "next-auth/providers";
+import { generateDemoApiKey } from "./lib/api-key";
 
 // Build providers array conditionally
 const providers: Provider[] = [];
@@ -30,26 +31,40 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  trustHost: true,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
   },
   callbacks: {
     signIn: async ({ user, account }) => {
-      // Set default role for new users based on domain
-      if (user && !user.role) {
-        // Check if this is a new user (no role set)
+      // Set default role and generate API key for new users
+      if (user && user.id) {
+        // Check if this is a new user (no role or API key set)
         const existingUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { role: true },
+          select: { role: true, apiKey: true },
         });
 
-        if (!existingUser?.role) {
-          // Default to role 2 for excasinoaff.com users (webmasters)
-          // You can detect domain from account or default to role 2
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { role: 2 },
-          });
+        // If user exists but missing role or apiKey, update them
+        if (existingUser) {
+          const updates: { role?: number; apiKey?: string } = {};
+
+          if (!existingUser.role) {
+            updates.role = 2; // Webmaster role
+          }
+
+          if (!existingUser.apiKey) {
+            updates.apiKey = generateDemoApiKey();
+          }
+
+          // Only update if there are changes
+          if (Object.keys(updates).length > 0) {
+            await prisma.user.update({
+              where: { id: user.id },
+              data: updates,
+            });
+          }
         }
       }
       return true;
