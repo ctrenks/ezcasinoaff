@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import DashboardStats from "./DashboardStats";
 
 export const dynamic = "force-dynamic";
 
@@ -24,31 +25,7 @@ export default async function WebmasterDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-purple-600">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">
-            Available Casinos
-          </h3>
-          <p className="text-3xl font-bold text-gray-900 mt-2">50</p>
-          <p className="text-gray-600 text-sm mt-1">Casinos to promote</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-indigo-600">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">
-            Games Available
-          </h3>
-          <p className="text-3xl font-bold text-gray-900 mt-2">200</p>
-          <p className="text-gray-600 text-sm mt-1">With demo play</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-pink-600">
-          <h3 className="text-gray-500 text-sm font-medium uppercase">
-            Affiliate Programs
-          </h3>
-          <p className="text-3xl font-bold text-gray-900 mt-2">Active</p>
-          <p className="text-gray-600 text-sm mt-1">Ready to join</p>
-        </div>
-      </div>
+      <DashboardStats />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
