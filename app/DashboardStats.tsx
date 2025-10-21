@@ -117,9 +117,10 @@ export default function DashboardStats() {
         <p className="text-3xl font-bold text-gray-900 mt-2">
           {stats.jurisdictions.toLocaleString()}
         </p>
-        <p className="text-gray-600 text-sm mt-1">Active licensing authorities</p>
+        <p className="text-gray-600 text-sm mt-1">
+          Active licensing authorities
+        </p>
       </div>
     </div>
   );
 }
-

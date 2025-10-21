@@ -30,7 +30,7 @@ export default async function WebmasterDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Link
-          href="/webmaster/casinos"
+          href="/casinos"
           className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
         >
           <div className="text-4xl mb-4">🎰</div>
@@ -43,7 +43,7 @@ export default async function WebmasterDashboard() {
         </Link>
 
         <Link
-          href="/webmaster/games"
+          href="/games"
           className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
         >
           <div className="text-4xl mb-4">🎮</div>
@@ -52,7 +52,7 @@ export default async function WebmasterDashboard() {
         </Link>
 
         <Link
-          href="/webmaster/affiliates"
+          href="/affiliates"
           className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
         >
           <div className="text-4xl mb-4">💰</div>
@@ -65,7 +65,7 @@ export default async function WebmasterDashboard() {
         </Link>
 
         <Link
-          href="/webmaster/profile"
+          href="/profile"
           className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
         >
           <div className="text-4xl mb-4">👤</div>
