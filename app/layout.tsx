@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ExCasinoAff - Casino Affiliate Portal",
+  title: "EZ Casino Affiliates - Casino Affiliate Portal",
   description: "Your gateway to casino affiliate programs and gaming content",
 };
 
@@ -24,11 +25,11 @@ export default async function WebmasterLayout({
           <header className="bg-gradient-to-r from-purple-900 to-indigo-900 text-white shadow-lg">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between items-center h-16">
-                <div className="flex items-center">
-                  <Link href="/" className="text-2xl font-bold">
-                    🎰 ExCasinoAff
+                <div className="flex items-center gap-4">
+                  <Link href="/">
+                    <Logo className="h-10 w-auto" />
                   </Link>
-                  <span className="ml-4 text-purple-300 text-sm">
+                  <span className="text-purple-300 text-sm">
                     Webmaster Portal
                   </span>
                 </div>
@@ -98,10 +99,11 @@ export default async function WebmasterLayout({
           <footer className="bg-gray-900 text-white py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <p className="text-gray-400">
-                © {new Date().getFullYear()} ExCasinoAff. All rights reserved.
+                © {new Date().getFullYear()} EZ Casino Affiliates. All rights
+                reserved.
               </p>
               <p className="text-gray-500 text-sm mt-2">
-                Your trusted partner in casino affiliate marketing
+                Making casino affiliate marketing easy
               </p>
             </div>
           </footer>

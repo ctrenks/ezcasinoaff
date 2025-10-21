@@ -23,10 +23,11 @@ export default async function WebmasterDashboard() {
         ) : (
           <>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome to ExCasinoAff
+              Welcome to EZ Casino Affiliates
             </h1>
             <p className="text-xl text-gray-600 mb-6">
-              Your gateway to casino affiliate programs and gaming content
+              Making casino affiliate marketing easy - Your gateway to casino
+              affiliate programs and gaming content
             </p>
             <div className="flex gap-4">
               <Link
