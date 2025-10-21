@@ -355,7 +355,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             Site Management (Coming Soon)
           </h3>
           <p className="text-sm text-purple-800">
-            Soon you'll be able to add and manage multiple sites, each with
+            Soon you&apos;ll be able to add and manage multiple sites, each with
             their own API access and subscription level. Upgrade to a paid plan
             for unlimited access and advanced features.
           </p>
