@@ -33,61 +33,60 @@ export default async function WebmasterLayout({
                   </span>
                 </div>
 
-                {session?.user ? (
-                  <nav className="flex items-center space-x-6">
-                    <Link
-                      href="/"
-                      className="hover:text-purple-300 transition"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="/casinos"
-                      className="hover:text-purple-300 transition"
-                    >
-                      Casinos
-                    </Link>
-                    <Link
-                      href="/games"
-                      className="hover:text-purple-300 transition"
-                    >
-                      Games
-                    </Link>
-                    <Link
-                      href="/affiliates"
-                      className="hover:text-purple-300 transition"
-                    >
-                      Affiliate Programs
-                    </Link>
-                    <Link
-                      href="/profile"
-                      className="hover:text-purple-300 transition"
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      href="/api/auth/signout"
-                      className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
-                    >
-                      Sign Out
-                    </Link>
-                  </nav>
-                ) : (
-                  <nav className="flex items-center space-x-4">
-                    <Link
-                      href="/auth/signin"
-                      className="hover:text-purple-300 transition"
-                    >
-                      Sign In
-                    </Link>
-                    <Link
-                      href="/auth/signin"
-                      className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
-                    >
-                      Get Started
-                    </Link>
-                  </nav>
-                )}
+                <nav className="flex items-center space-x-6">
+                  <Link href="/" className="hover:text-purple-300 transition">
+                    Home
+                  </Link>
+                  <Link
+                    href="/casinos"
+                    className="hover:text-purple-300 transition"
+                  >
+                    Casinos
+                  </Link>
+                  <Link
+                    href="/affiliates"
+                    className="hover:text-purple-300 transition"
+                  >
+                    Affiliate Programs
+                  </Link>
+                  {session?.user ? (
+                    <>
+                      <Link
+                        href="/games"
+                        className="hover:text-purple-300 transition"
+                      >
+                        Games
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="hover:text-purple-300 transition"
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        href="/api/auth/signout"
+                        className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
+                      >
+                        Sign Out
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/auth/signin"
+                        className="hover:text-purple-300 transition"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/auth/signin"
+                        className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
+                      >
+                        Get Started
+                      </Link>
+                    </>
+                  )}
+                </nav>
               </div>
             </div>
           </header>

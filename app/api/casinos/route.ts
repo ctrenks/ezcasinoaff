@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/auth";
 
 export async function GET() {
   try {
-    const session = await auth();
-
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     // Fetch active casinos ordered alphabetically
     const casinos = await prisma.casino_p_casinos.findMany({
       where: {
@@ -44,4 +37,3 @@ export async function GET() {
     );
   }
 }
-

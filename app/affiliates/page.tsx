@@ -1,16 +1,8 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import AffiliatesProgramList from "./AffiliatesProgramList";
 
 export const dynamic = "force-dynamic";
 
 export default async function WebmasterAffiliates() {
-  const session = await auth();
-
-  if (!session?.user) {
-    redirect("/auth/signin");
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
