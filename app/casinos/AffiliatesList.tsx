@@ -45,7 +45,10 @@ export default function AffiliatesList() {
     return (
       <div className="space-y-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-lg shadow-md p-6 animate-pulse">
+          <div
+            key={i}
+            className="bg-white rounded-lg shadow-md p-6 animate-pulse"
+          >
             <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
             <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
             <div className="grid grid-cols-3 gap-4">
@@ -81,29 +84,27 @@ export default function AffiliatesList() {
                 {affiliate.casinos.length !== 1 ? "s" : ""}
               </p>
             </div>
-            {affiliate.referralLink && (
-              <a
-                href={affiliate.referralLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition"
+            <a
+              href={affiliate.referralLink || affiliate.aff_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                  />
-                </svg>
-                Join Program
-              </a>
-            )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                />
+              </svg>
+              {affiliate.referralLink ? "Join Program" : "Visit Affiliate"}
+            </a>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -115,7 +116,9 @@ export default function AffiliatesList() {
                 <div className="h-20 bg-white rounded flex items-center justify-center p-2 mb-2">
                   {casino.vercel_image_url || casino.homepageimage ? (
                     <img
-                      src={casino.vercel_image_url || casino.homepageimage || ""}
+                      src={
+                        casino.vercel_image_url || casino.homepageimage || ""
+                      }
                       alt={casino.casino || "Casino"}
                       className="max-h-full max-w-full object-contain"
                     />
@@ -134,4 +137,3 @@ export default function AffiliatesList() {
     </div>
   );
 }
-
