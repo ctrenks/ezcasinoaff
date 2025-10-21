@@ -7,8 +7,7 @@ interface Casino {
   casino: string | null;
   clean_name: string | null;
   url: string | null;
-  vercel_image_url: string | null;
-  homepageimage: string | null;
+  vercel_casino_button: string | null;
 }
 
 interface Affiliate {
@@ -114,11 +113,9 @@ export default function AffiliatesList() {
                 className="bg-gray-50 rounded-lg p-3 hover:bg-gray-100 transition"
               >
                 <div className="h-20 bg-white rounded flex items-center justify-center p-2 mb-2">
-                  {casino.vercel_image_url || casino.homepageimage ? (
+                  {casino.vercel_casino_button ? (
                     <img
-                      src={
-                        casino.vercel_image_url || casino.homepageimage || ""
-                      }
+                      src={casino.vercel_casino_button}
                       alt={casino.casino || "Casino"}
                       className="max-h-full max-w-full object-contain"
                     />

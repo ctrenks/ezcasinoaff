@@ -29,8 +29,7 @@ export async function GET() {
             casino: true,
             clean_name: true,
             url: true,
-            vercel_image_url: true,
-            homepageimage: true,
+            vercel_casino_button: true,
           },
           orderBy: {
             casino: "asc",
