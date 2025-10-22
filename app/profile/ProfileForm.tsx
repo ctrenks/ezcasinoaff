@@ -2,15 +2,20 @@
 
 import { useState } from "react";
 import { User } from "next-auth";
+import { useRouter } from "next/navigation";
 
 interface ProfileFormProps {
   user: User;
 }
 
 export default function ProfileForm({ user }: ProfileFormProps) {
+  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [showGenerateConfirm, setShowGenerateConfirm] = useState(false);
   const [message, setMessage] = useState("");
+  const [currentApiKey, setCurrentApiKey] = useState(user.apiKey || "");
 
   const [profile, setProfile] = useState({
     name: user.name || "",
@@ -72,6 +77,37 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       setMessage("An error occurred. Please try again.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGenerateApiKey = async () => {
+    setGenerating(true);
+    setMessage("");
+    setShowGenerateConfirm(false);
+
+    try {
+      const response = await fetch("/api/user/generate-api-key", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.apiKey) {
+        setCurrentApiKey(data.apiKey);
+        setMessage(
+          "New API key generated successfully! Make sure to update it in your applications."
+        );
+        // Refresh the page to update the session
+        router.refresh();
+      } else {
+        setMessage(
+          data.error || "Failed to generate API key. Please try again."
+        );
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -289,22 +325,79 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Your API Key
           </label>
-          <div className="flex items-center space-x-2">
-            <code className="flex-1 bg-white border border-gray-300 rounded px-4 py-2 font-mono text-sm">
-              {user.apiKey || "No API key assigned"}
+          <div className="flex items-center space-x-2 mb-3">
+            <code className="flex-1 bg-white border border-gray-300 rounded px-4 py-2 font-mono text-sm break-all">
+              {currentApiKey || "No API key assigned"}
             </code>
             <button
               type="button"
               onClick={() => {
-                void navigator.clipboard.writeText(user.apiKey || "");
+                void navigator.clipboard.writeText(currentApiKey || "");
                 setMessage("API key copied to clipboard!");
               }}
-              disabled={!user.apiKey}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={!currentApiKey}
+              className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
             >
               Copy
             </button>
           </div>
+
+          {!showGenerateConfirm ? (
+            <button
+              type="button"
+              onClick={() => setShowGenerateConfirm(true)}
+              disabled={generating}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {currentApiKey ? "Generate New API Key" : "Generate API Key"}
+            </button>
+          ) : (
+            <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-4">
+              <div className="flex items-start mb-3">
+                <svg
+                  className="w-5 h-5 text-yellow-600 mr-2 flex-shrink-0 mt-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <div>
+                  <h4 className="font-semibold text-yellow-900 mb-1">
+                    Warning: This will override your current API key
+                  </h4>
+                  <p className="text-sm text-yellow-800">
+                    {currentApiKey
+                      ? "Your old API key will stop working immediately. Make sure to update it in all your applications."
+                      : "A new demo API key will be generated for your account."}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleGenerateApiKey}
+                  disabled={generating}
+                  className="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                >
+                  {generating ? "Generating..." : "Confirm Generate"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowGenerateConfirm(false)}
+                  disabled={generating}
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">

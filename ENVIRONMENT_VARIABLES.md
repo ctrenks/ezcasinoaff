@@ -4,6 +4,8 @@ Make sure these are set in your Vercel Project Settings → Environment Variable
 
 ## Authentication (Required)
 
+### Auth Secret
+
 Either of these works (use the one you already have):
 
 ```
@@ -21,6 +23,22 @@ To generate a secure secret, run:
 ```bash
 openssl rand -base64 32
 ```
+
+### Auth URL (Required for Production)
+
+Set your production URL to ensure HTTPS redirects work correctly:
+
+```
+NEXTAUTH_URL=https://www.ezcasinoaff.com
+```
+
+OR (Auth.js v5 naming):
+
+```
+AUTH_URL=https://www.ezcasinoaff.com
+```
+
+**Important:** Without this, sign-out and callback URLs will use HTTP instead of HTTPS, causing browser security warnings.
 
 ## Database (Required)
 
@@ -62,9 +80,22 @@ If you're getting "Verification" errors when clicking email links:
 ## Setting Environment Variables in Vercel
 
 1. Go to your Vercel Dashboard
-2. Select your project
+2. Select your project (ezcasinoaff)
 3. Go to Settings → Environment Variables
-4. Add each variable with its value
+4. Add each variable with its value:
+   - `NEXTAUTH_SECRET` (or `AUTH_SECRET`)
+   - `NEXTAUTH_URL=https://www.ezcasinoaff.com` (or `AUTH_URL`)
+   - `DATABASE_PRISMA_URL`
+   - `RESEND_API_KEY`
 5. Select which environments (Production, Preview, Development)
 6. Click "Save"
-7. Redeploy your application
+7. **Redeploy your application** for changes to take effect
+
+## Quick Fix for HTTP Warning
+
+To fix the HTTP/HTTPS warning on sign-out:
+
+1. Go to Vercel Dashboard → ezcasinoaff → Settings → Environment Variables
+2. Add: `NEXTAUTH_URL` with value `https://www.ezcasinoaff.com`
+3. Redeploy the application
+4. The sign-out and all auth callbacks will now use HTTPS
