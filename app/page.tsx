@@ -94,6 +94,28 @@ export default async function WebmasterDashboard() {
         {session?.user && (
           <>
             <Link
+              href="/profile/sites"
+              className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+            >
+              <div className="text-4xl mb-4">🌐</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">My Sites</h3>
+              <p className="text-gray-600">Manage your sites and API keys</p>
+            </Link>
+
+            <Link
+              href="/profile/credits"
+              className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
+            >
+              <div className="text-4xl mb-4">💎</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                Radium Credits
+              </h3>
+              <p className="text-gray-600">
+                Purchase and manage your credit balance
+              </p>
+            </Link>
+
+            <Link
               href="/profile"
               className="bg-white rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1"
             >

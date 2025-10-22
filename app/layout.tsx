@@ -53,16 +53,22 @@ export default async function WebmasterLayout({
                   {session?.user ? (
                     <>
                       <Link
-                        href="/games"
+                        href="/profile/sites"
                         className="hover:text-purple-300 transition"
                       >
-                        Games
+                        My Sites
+                      </Link>
+                      <Link
+                        href="/profile/credits"
+                        className="hover:text-purple-300 transition"
+                      >
+                        Credits
                       </Link>
                       <Link
                         href="/profile"
                         className="hover:text-purple-300 transition"
                       >
-                        My Profile
+                        Profile
                       </Link>
                       <Link
                         href="/api/auth/signout"
