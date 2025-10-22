@@ -189,7 +189,7 @@ model Subscription {
 enum SubscriptionPlan {
   BASIC
   PRO
-  ENTERPRISE
+  EVERYTHING
 }
 
 enum SubscriptionStatus {
