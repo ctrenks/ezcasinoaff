@@ -20,7 +20,7 @@ export default function CasinoOperatorsPage() {
         </p>
         <div className="flex gap-4 justify-center">
           <a
-            href="https://portal.ezcasinooperators.com"
+            href="https://www.allmediomatter.com"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition"
@@ -113,7 +113,10 @@ export default function CasinoOperatorsPage() {
               </li>
               <li className="flex items-start">
                 <span className="text-green-500 mr-2">✓</span>
-                <span>Add new casinos and software with a single click</span>
+                <span>
+                  Get notified of added software, banking realtime to keep your
+                  brands updated
+                </span>
               </li>
               <li className="flex items-start">
                 <span className="text-green-500 mr-2">✓</span>
@@ -123,7 +126,7 @@ export default function CasinoOperatorsPage() {
               </li>
               <li className="flex items-start">
                 <span className="text-green-500 mr-2">✓</span>
-                <span>Real-time tracking and analytics across the network</span>
+                <span>Get new affiliate sign ups and onboard same day</span>
               </li>
             </ul>
           </div>
@@ -393,7 +396,7 @@ export default function CasinoOperatorsPage() {
         </p>
         <div className="flex gap-4 justify-center">
           <a
-            href="https://portal.ezcasinooperators.com"
+            href="https://www.allmediomatter.com"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition"
