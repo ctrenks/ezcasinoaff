@@ -117,9 +117,11 @@ export default async function PricingPage() {
           </span>
         </h2>
         <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
-          Credits are used for premium features like game screenshots and bonus
-          code feeds if not included in your plan. Credits are shared across all
-          your sites.
+          Radium Credits power our AI content generation system that creates
+          SEO-quality titles, descriptions, and comprehensive reviews for casinos
+          and games - complete with FAQs and Pro/Con sections. Generate
+          ready-to-publish content instantly, then tweak manually for maximum SEO
+          impact. Credits are shared across all your sites.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Object.values(CREDIT_PACKS).map((pack) => (
@@ -188,39 +190,53 @@ export default async function PricingPage() {
       {/* Credit Usage */}
       <div className="bg-gray-50 rounded-lg p-8 mb-16">
         <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-          How Credits Work
+          AI-Powered Content Generation
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+          Our unique Radium system uses AI to generate publication-ready content
+          for your casino affiliate site. Each piece is SEO-optimized and ready to
+          publish - just add your personal touch!
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="text-3xl mb-3">🖼️</div>
-            <h4 className="font-bold text-gray-900 mb-2">Game Screenshots</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              5 credits per image if not on Pro/Enterprise plan
+            <div className="text-4xl mb-3">🎰</div>
+            <h4 className="font-bold text-gray-900 mb-2">Casino Reviews</h4>
+            <p className="text-gray-600 text-sm mb-3">
+              Generate complete casino reviews with:
             </p>
-            <p className="text-xs text-gray-500">
-              Included free with Pro and Enterprise plans
-            </p>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>✓ SEO-optimized title &amp; meta description</li>
+              <li>✓ Comprehensive review content</li>
+              <li>✓ Pros &amp; Cons sections</li>
+              <li>✓ FAQ sections</li>
+              <li>✓ Ready to publish immediately</li>
+            </ul>
           </div>
           <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="text-3xl mb-3">🎁</div>
-            <h4 className="font-bold text-gray-900 mb-2">Bonus Code API</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              10 credits per call if not on Enterprise plan
+            <div className="text-4xl mb-3">🎮</div>
+            <h4 className="font-bold text-gray-900 mb-2">Game Reviews</h4>
+            <p className="text-gray-600 text-sm mb-3">
+              Generate complete game reviews with:
             </p>
-            <p className="text-xs text-gray-500">
-              Included free with Enterprise plan
-            </p>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>✓ SEO-optimized title &amp; meta description</li>
+              <li>✓ Detailed game review content</li>
+              <li>✓ Pros &amp; Cons analysis</li>
+              <li>✓ FAQ sections</li>
+              <li>✓ Ready to publish immediately</li>
+            </ul>
           </div>
-          <div className="bg-white rounded-lg p-6 shadow-sm">
-            <div className="text-3xl mb-3">🚀</div>
-            <h4 className="font-bold text-gray-900 mb-2">Extra API Calls</h4>
-            <p className="text-gray-600 text-sm mb-2">
-              50 credits per 1,000 calls over your rate limit
-            </p>
-            <p className="text-xs text-gray-500">
-              Or upgrade your plan for higher limits
-            </p>
-          </div>
+        </div>
+        <div className="mt-6 bg-purple-50 border border-purple-200 rounded-lg p-6">
+          <h4 className="font-bold text-purple-900 mb-2">
+            💡 Pro Tip: The Winning Formula
+          </h4>
+          <p className="text-purple-800 text-sm">
+            While our AI generates excellent SEO-quality content, manually tweaking
+            the generated reviews adds your unique voice and ensures even better
+            search engine rankings. Use Radium for speed, add your expertise for
+            perfection!
+          </p>
         </div>
       </div>
 
@@ -245,9 +261,12 @@ export default async function PricingPage() {
               What are Radium Credits?
             </h3>
             <p className="text-gray-600">
-              Credits are a flexible payment system for premium features.
-              They&apos;re tied to your user account and can be used across all
-              your sites. Purchase what you need, when you need it.
+              Radium Credits power our unique AI content generation system. Use
+              them to instantly generate SEO-optimized casino and game reviews
+              complete with titles, descriptions, comprehensive content, FAQs, and
+              Pro/Con sections. Credits are tied to your user account and work
+              across all your sites. Each generated review is ready to publish or
+              can be tweaked for even better results.
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">

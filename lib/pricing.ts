@@ -107,10 +107,9 @@ export const CREDIT_PACKS = {
 } as const;
 
 export const CREDIT_COSTS = {
-  gameScreenshot: 5, // Per image if not on Pro/Enterprise plan
-  bonusCodeApiCall: 10, // Per call if not on Enterprise plan
-  extraApiCalls1000: 50, // When exceeding rate limits
-  prioritySupport: 50, // Per support request if not on Enterprise
+  casinoReview: 10, // Generate full AI casino review (title, description, content, FAQ, Pro/Con)
+  gameReview: 5, // Generate full AI game review (title, description, content, FAQ, Pro/Con)
+  bulkGeneration: 100, // Generate multiple reviews at once (10+ items)
 } as const;
 
 // Helper functions
