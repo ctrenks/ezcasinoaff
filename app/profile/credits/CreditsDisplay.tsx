@@ -113,12 +113,12 @@ export default function CreditsDisplay() {
             <div
               key={pack.id}
               className={`border-2 rounded-lg p-6 hover:shadow-lg transition ${
-                pack.popular
+                "popular" in pack && pack.popular
                   ? "border-purple-600 bg-purple-50"
                   : "border-gray-200"
               }`}
             >
-              {pack.popular && (
+              {"popular" in pack && pack.popular && (
                 <span className="inline-block px-2 py-1 text-xs font-semibold bg-purple-600 text-white rounded-full mb-2">
                   Most Popular
                 </span>
