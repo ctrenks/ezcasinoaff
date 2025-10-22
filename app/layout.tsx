@@ -51,6 +51,12 @@ export default async function WebmasterLayout({
                     Affiliate Programs
                   </Link>
                   <Link
+                    href="/casino-operators"
+                    className="hover:text-orange-300 transition text-orange-400"
+                  >
+                    Casino Operators
+                  </Link>
+                  <Link
                     href="/wp-plugin"
                     className="hover:text-purple-300 transition"
                   >
