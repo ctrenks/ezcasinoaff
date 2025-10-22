@@ -29,8 +29,8 @@ export default function AddSiteForm() {
       const data = await response.json();
 
       if (response.ok) {
-        // Redirect to the new site's page
-        router.push(`/profile/sites/${data.id}`);
+        // Redirect to sites list
+        router.push("/profile/sites");
       } else {
         setError(data.error || "Failed to create site");
       }
@@ -120,6 +120,13 @@ export default function AddSiteForm() {
             ($420/year)
           </li>
         </ul>
+        <a
+          href="/pricing"
+          target="_blank"
+          className="inline-block mt-2 text-sm text-blue-700 hover:text-blue-900 font-semibold underline"
+        >
+          View full pricing details →
+        </a>
       </div>
 
       <div className="flex gap-4">

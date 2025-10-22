@@ -50,6 +50,12 @@ export default async function WebmasterLayout({
                   >
                     Affiliate Programs
                   </Link>
+                  <Link
+                    href="/pricing"
+                    className="hover:text-purple-300 transition"
+                  >
+                    Pricing
+                  </Link>
                   {session?.user ? (
                     <>
                       <Link

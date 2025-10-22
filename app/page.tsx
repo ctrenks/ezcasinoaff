@@ -37,8 +37,14 @@ export default async function WebmasterDashboard() {
                 Get Started
               </Link>
               <Link
-                href="/casinos"
+                href="/pricing"
                 className="bg-white hover:bg-gray-50 text-purple-600 border-2 border-purple-600 px-8 py-3 rounded-lg font-semibold transition"
+              >
+                View Pricing
+              </Link>
+              <Link
+                href="/casinos"
+                className="bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-300 px-8 py-3 rounded-lg font-semibold transition"
               >
                 Browse Casinos
               </Link>
@@ -88,6 +94,17 @@ export default async function WebmasterDashboard() {
           </h3>
           <p className="text-gray-600">
             Join casino affiliate programs and earn commissions
+          </p>
+        </Link>
+
+        <Link
+          href="/pricing"
+          className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg shadow-md p-8 hover:shadow-xl transition transform hover:-translate-y-1 text-white"
+        >
+          <div className="text-4xl mb-4">💎</div>
+          <h3 className="text-xl font-bold mb-2">View Pricing</h3>
+          <p className="text-purple-100">
+            Plans starting at $25/month • Pay annually
           </p>
         </Link>
 
