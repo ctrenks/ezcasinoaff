@@ -246,8 +246,8 @@ export default async function PricingPage() {
             </h3>
             <p className="text-gray-600">
               Credits are a flexible payment system for premium features.
-              They're tied to your user account and can be used across all your
-              sites. Purchase what you need, when you need it.
+              They&apos;re tied to your user account and can be used across all
+              your sites. Purchase what you need, when you need it.
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
