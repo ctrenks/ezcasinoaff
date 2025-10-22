@@ -234,6 +234,31 @@ export default async function WPPluginPage() {
         </div>
       </div>
 
+      {/* Free Trial Notice */}
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-2xl p-8 mb-16">
+        <div className="text-center">
+          <div className="inline-block px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold mb-4">
+            🎉 FREE TO TRY
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            Test Drive with a Free Demo API Key
+          </h3>
+          <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-4">
+            Get a free demo API key instantly when you register! Experiment with
+            the plugin and API access before committing to a subscription.
+            Perfect for testing integration and exploring features.
+          </p>
+          {!session?.user && (
+            <Link
+              href="/auth/signin"
+              className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold transition"
+            >
+              Get Free Demo Key →
+            </Link>
+          )}
+        </div>
+      </div>
+
       {/* How It Works */}
       <div className="bg-gray-50 rounded-2xl p-12 mb-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">

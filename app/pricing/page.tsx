@@ -27,6 +27,13 @@ export default async function PricingPage() {
           </Link>{" "}
           with features beyond most other casino-based plugins.
         </p>
+        <div className="mt-6 inline-block bg-gradient-to-r from-green-100 to-blue-100 border-2 border-green-300 rounded-xl px-6 py-4">
+          <p className="text-gray-900 font-semibold">
+            🎉 <strong>New User?</strong> Get a free limited demo API key on
+            registration to experiment with the plugin and API access before
+            subscribing!
+          </p>
+        </div>
       </div>
 
       {/* Subscription Plans */}
