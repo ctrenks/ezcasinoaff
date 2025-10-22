@@ -118,10 +118,10 @@ export default async function PricingPage() {
         </h2>
         <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
           Radium Credits power our AI content generation system that creates
-          SEO-quality titles, descriptions, and comprehensive reviews for casinos
-          and games - complete with FAQs and Pro/Con sections. Generate
-          ready-to-publish content instantly, then tweak manually for maximum SEO
-          impact. Credits are shared across all your sites.
+          SEO-quality titles, descriptions, and comprehensive reviews for
+          casinos and games - complete with FAQs and Pro/Con sections. Generate
+          ready-to-publish content instantly, then tweak manually for maximum
+          SEO impact. Credits are shared across all your sites.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Object.values(CREDIT_PACKS).map((pack) => (
@@ -194,8 +194,8 @@ export default async function PricingPage() {
         </h3>
         <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
           Our unique Radium system uses AI to generate publication-ready content
-          for your casino affiliate site. Each piece is SEO-optimized and ready to
-          publish - just add your personal touch!
+          for your casino affiliate site. Each piece is SEO-optimized and ready
+          to publish - just add your personal touch!
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -232,10 +232,10 @@ export default async function PricingPage() {
             💡 Pro Tip: The Winning Formula
           </h4>
           <p className="text-purple-800 text-sm">
-            While our AI generates excellent SEO-quality content, manually tweaking
-            the generated reviews adds your unique voice and ensures even better
-            search engine rankings. Use Radium for speed, add your expertise for
-            perfection!
+            While our AI generates excellent SEO-quality content, manually
+            tweaking the generated reviews adds your unique voice and ensures
+            even better search engine rankings. Use Radium for speed, add your
+            expertise for perfection!
           </p>
         </div>
       </div>
@@ -263,10 +263,10 @@ export default async function PricingPage() {
             <p className="text-gray-600">
               Radium Credits power our unique AI content generation system. Use
               them to instantly generate SEO-optimized casino and game reviews
-              complete with titles, descriptions, comprehensive content, FAQs, and
-              Pro/Con sections. Credits are tied to your user account and work
-              across all your sites. Each generated review is ready to publish or
-              can be tweaked for even better results.
+              complete with titles, descriptions, comprehensive content, FAQs,
+              and Pro/Con sections. Credits are tied to your user account and
+              work across all your sites. Each generated review is ready to
+              publish or can be tweaked for even better results.
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
