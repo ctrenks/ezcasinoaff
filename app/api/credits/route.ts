@@ -43,7 +43,20 @@ export async function GET() {
           lifetime: 0,
         },
         include: {
-          transactions: true,
+          transactions: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 20,
+            include: {
+              site: {
+                select: {
+                  name: true,
+                  domain: true,
+                },
+              },
+            },
+          },
         },
       });
     }
