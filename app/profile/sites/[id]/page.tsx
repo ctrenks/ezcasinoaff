@@ -72,6 +72,21 @@ export default async function SiteDetailsPage({ params }: PageProps) {
     );
   }
 
+  // Convert Prisma Decimal to number for client component
+  const siteData = {
+    ...site,
+    subscription: site.subscription
+      ? {
+          ...site.subscription,
+          amount: site.subscription.amount.toNumber(),
+          payments: site.subscription.payments.map((payment) => ({
+            ...payment,
+            amount: payment.amount.toNumber(),
+          })),
+        }
+      : null,
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header */}
@@ -109,7 +124,7 @@ export default async function SiteDetailsPage({ params }: PageProps) {
       </div>
 
       {/* Main Content */}
-      <SiteDetailsClient site={site} />
+      <SiteDetailsClient site={siteData} />
     </div>
   );
 }
