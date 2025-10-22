@@ -71,7 +71,15 @@ export default async function WPPluginPage() {
                 <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
                   ✓
                 </div>
-                <span className="font-semibold">20,000+ Game Database</span>
+                <span className="font-semibold">
+                  Over 20,000 games w/ Slotslaunch integration
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                  ✓
+                </div>
+                <span className="font-semibold">Over 250,000 Images</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
@@ -114,8 +122,9 @@ export default async function WPPluginPage() {
               Game Library
             </h3>
             <p className="text-gray-600">
-              Access 20,000+ casino games with thumbnails, descriptions, and
-              playable demos. Create game pages automatically with shortcodes.
+              Access over 20,000 casino games with Slotslaunch integration.
+              Includes thumbnails, descriptions, and playable demos. Create game
+              pages automatically with shortcodes.
             </p>
           </div>
 
@@ -316,7 +325,7 @@ export default async function WPPluginPage() {
               </tr>
               <tr>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  20,000+ Games
+                  Over 20,000 Games (Slotslaunch)
                 </td>
                 <td className="px-6 py-4 text-center text-green-600">✓</td>
                 <td className="px-6 py-4 text-center text-green-600 bg-purple-50">
