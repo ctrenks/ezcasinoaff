@@ -283,8 +283,10 @@ export default async function PricingPage() {
               Can I change plans later?
             </h3>
             <p className="text-gray-600">
-              Yes! You can upgrade or downgrade your plan at any time. Changes
-              will be prorated based on your billing cycle.
+              You can upgrade your plan during the year at any time. To change
+              to a different plan or cancel, you can do so at the end of your
+              annual term. This ensures you get the full value of your
+              subscription.
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
