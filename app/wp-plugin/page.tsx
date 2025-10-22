@@ -83,7 +83,7 @@ export default async function WPPluginPage() {
                 <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
                   ✓
                 </div>
-                <span className="font-semibold">AI Content Generation</span>
+                <span className="font-semibold">Gaming Content Generation</span>
               </div>
             </div>
           </div>
@@ -103,8 +103,8 @@ export default async function WPPluginPage() {
             </h3>
             <p className="text-gray-600">
               Display casino listings with ratings, reviews, bonuses, and
-              affiliate links. Automatically sync with our database of 350+
-              casinos.
+              affiliate links. Access our database of 350+ casinos or add your
+              own custom casinos with full control.
             </p>
           </div>
 
@@ -120,13 +120,14 @@ export default async function WPPluginPage() {
           </div>
 
           <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
-            <div className="text-4xl mb-4">🤖</div>
+            <div className="text-4xl mb-4">✍️</div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              AI Review Generator
+              Gaming Content Generation
             </h3>
             <p className="text-gray-600">
-              Generate SEO-optimized casino and game reviews with titles,
-              descriptions, Pro/Con sections, and FAQs using Radium Credits.
+              Generate professional casino and game reviews with SEO-optimized
+              titles, descriptions, Pro/Con sections, and FAQs using Radium
+              Credits. Perfect for scaling your content.
             </p>
           </div>
 
@@ -160,7 +161,8 @@ export default async function WPPluginPage() {
             </h3>
             <p className="text-gray-600">
               Powerful shortcodes for casino lists, game grids, comparison
-              tables, top picks, and more. Full customization options included.
+              tables, top picks, and more. Includes an intuitive UI wizard to
+              create and customize shortcodes without coding.
             </p>
           </div>
 
@@ -194,6 +196,30 @@ export default async function WPPluginPage() {
             <p className="text-gray-600">
               Pre-built templates for casino pages, game pages, and review
               layouts. Fully customizable with your branding and style.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+            <div className="text-4xl mb-4">➕</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Add Custom Casinos
+            </h3>
+            <p className="text-gray-600">
+              Not just limited to our database! Add your own custom casinos,
+              manage exclusive deals, and maintain complete control over your
+              casino listings.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition">
+            <div className="text-4xl mb-4">🔧</div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Shortcode Wizard
+            </h3>
+            <p className="text-gray-600">
+              Visual interface to build shortcodes without touching code. Select
+              options, customize settings, and generate ready-to-use shortcodes
+              instantly.
             </p>
           </div>
         </div>

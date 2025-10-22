@@ -96,10 +96,10 @@ export default async function WebmasterProfile() {
                   <p className="text-sm text-gray-600 mt-1">{site.domain}</p>
                 </div>
                 <Link
-                  href={`/profile/sites`}
+                  href={`/profile/sites/${site.id}`}
                   className="text-purple-600 hover:text-purple-700 font-medium text-sm"
                 >
-                  Manage →
+                  View Details →
                 </Link>
               </div>
             ))}
