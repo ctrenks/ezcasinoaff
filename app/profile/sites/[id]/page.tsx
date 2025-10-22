@@ -72,19 +72,45 @@ export default async function SiteDetailsPage({ params }: PageProps) {
     );
   }
 
-  // Convert Prisma Decimal to number for client component
+  // Convert Prisma data to client-compatible format
   const siteData = {
-    ...site,
+    id: site.id,
+    domain: site.domain,
+    name: site.name,
+    description: site.description,
+    apiKey: site.apiKey,
+    status: site.status,
+    isActive: site.isActive,
+    createdAt: site.createdAt,
     subscription: site.subscription
       ? {
-          ...site.subscription,
+          plan: site.subscription.plan,
+          status: site.subscription.status,
           amount: site.subscription.amount.toNumber(),
+          startDate: site.subscription.startDate,
+          endDate: site.subscription.endDate,
+          autoRenew: site.subscription.autoRenew,
           payments: site.subscription.payments.map((payment) => ({
-            ...payment,
+            id: payment.id,
             amount: payment.amount.toNumber(),
+            status: payment.status,
+            type: payment.type,
+            createdAt: payment.createdAt,
           })),
         }
       : null,
+    apiUsage: site.apiUsage.map((usage) => ({
+      id: usage.id,
+      endpoint: usage.endpoint,
+      requestCount: usage.requestCount,
+      createdAt: usage.createdAt,
+    })),
+    radiumUsage: site.radiumUsage.map((usage) => ({
+      id: usage.id,
+      feature: usage.feature,
+      creditsUsed: usage.creditsUsed,
+      createdAt: usage.createdAt,
+    })),
   };
 
   return (

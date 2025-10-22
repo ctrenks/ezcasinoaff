@@ -18,8 +18,8 @@ interface SiteDetailsProps {
       plan: string;
       status: string;
       amount: number;
-      startDate: Date;
-      endDate: Date;
+      startDate: Date | null;
+      endDate: Date | null;
       autoRenew: boolean;
       payments: Array<{
         id: string;
@@ -316,13 +316,17 @@ export default function SiteDetailsClient({ site }: SiteDetailsProps) {
               <div>
                 <span className="text-sm text-gray-600">Start Date:</span>
                 <p className="font-medium text-gray-900">
-                  {new Date(site.subscription.startDate).toLocaleDateString()}
+                  {site.subscription.startDate
+                    ? new Date(site.subscription.startDate).toLocaleDateString()
+                    : "Not set"}
                 </p>
               </div>
               <div>
                 <span className="text-sm text-gray-600">End Date:</span>
                 <p className="font-medium text-gray-900">
-                  {new Date(site.subscription.endDate).toLocaleDateString()}
+                  {site.subscription.endDate
+                    ? new Date(site.subscription.endDate).toLocaleDateString()
+                    : "Not set"}
                 </p>
               </div>
               <div>
