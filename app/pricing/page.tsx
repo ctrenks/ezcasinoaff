@@ -14,9 +14,18 @@ export default async function PricingPage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
           Simple, Transparent Pricing
         </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
           Choose the plan that fits your needs. All plans are billed annually
-          and include access to our casino and game APIs.
+          and include access to our casino and game APIs. These API models
+          deliver everything you need to build and maintain your project, and
+          included with any subscription is our{" "}
+          <Link
+            href="/wp-plugin"
+            className="text-purple-600 hover:text-purple-700 font-semibold underline"
+          >
+            WordPress plugin
+          </Link>{" "}
+          with features beyond most other casino-based plugins.
         </p>
       </div>
 

@@ -51,6 +51,12 @@ export default async function WebmasterLayout({
                     Affiliate Programs
                   </Link>
                   <Link
+                    href="/wp-plugin"
+                    className="hover:text-purple-300 transition"
+                  >
+                    WP Plugin
+                  </Link>
+                  <Link
                     href="/pricing"
                     className="hover:text-purple-300 transition"
                   >
