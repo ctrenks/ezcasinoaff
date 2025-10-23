@@ -139,11 +139,11 @@ export async function PATCH(
       updateData.title = title;
     }
 
-    if (isPinned !== undefined && isAdmin) {
+    if (isPinned !== undefined && isAdminUser) {
       updateData.isPinned = isPinned;
     }
 
-    if (isLocked !== undefined && isAdmin) {
+    if (isLocked !== undefined && isAdminUser) {
       updateData.isLocked = isLocked;
     }
 
