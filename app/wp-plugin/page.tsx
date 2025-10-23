@@ -123,8 +123,9 @@ export default async function WPPluginPage() {
             </h3>
             <p className="text-gray-600">
               Access over 20,000 casino games with Slotslaunch integration.
-              Includes thumbnails, descriptions, and playable demos. Create game
-              pages automatically with shortcodes.
+              Includes thumbnails, descriptions, and playable demos (with valid
+              Slotslaunch account). Create game pages automatically with
+              shortcodes.
             </p>
           </div>
 

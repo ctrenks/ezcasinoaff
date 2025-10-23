@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import Link from "next/link";
 import { formatRelativeTime } from "@/lib/forum-utils";
+import { isAdmin } from "@/lib/forum-auth";
 
 async function getCategories() {
   try {
@@ -62,15 +63,14 @@ export default async function ForumPage() {
         {categories.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center text-gray-500">
             <p>No forum categories yet.</p>
-            {session?.user &&
-              (session.user.role === 1 || session.user.role === 0) && (
-                <Link
-                  href="/forum/admin"
-                  className="text-purple-600 hover:underline mt-2 inline-block"
-                >
-                  Create the first category
-                </Link>
-              )}
+            {session?.user && isAdmin(session.user.role) && (
+              <Link
+                href="/forum/admin"
+                className="text-purple-600 hover:underline mt-2 inline-block"
+              >
+                Create the first category
+              </Link>
+            )}
           </div>
         ) : (
           categories.map((category: any) => (

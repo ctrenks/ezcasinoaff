@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { isAdmin } from "@/lib/forum-auth";
 
 // GET - Get topic by slug with posts
 export async function GET(
@@ -120,15 +121,15 @@ export async function PATCH(
     }
 
     // Check permissions
-    const isAdmin = session.user.role === 1 || session.user.role === 0;
+    const isAdminUser = isAdmin(session.user.role);
     const isAuthor = topic.authorId === session.user.id;
 
-    if (!isAdmin && !isAuthor) {
+    if (!isAdminUser && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Only admins can pin/lock topics
-    if ((isPinned !== undefined || isLocked !== undefined) && !isAdmin) {
+    if ((isPinned !== undefined || isLocked !== undefined) && !isAdminUser) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -198,10 +199,10 @@ export async function DELETE(
     }
 
     // Check permissions - only admins or topic author can delete
-    const isAdmin = session.user.role === 1 || session.user.role === 0;
+    const isAdminUser = isAdmin(session.user.role);
     const isAuthor = topic.authorId === session.user.id;
 
-    if (!isAdmin && !isAuthor) {
+    if (!isAdminUser && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

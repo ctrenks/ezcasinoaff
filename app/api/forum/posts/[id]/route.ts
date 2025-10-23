@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { isAdmin } from "@/lib/forum-auth";
 
 // GET - Get single post
 export async function GET(
@@ -68,10 +69,10 @@ export async function PATCH(
     }
 
     // Check permissions
-    const isAdmin = session.user.role === 1 || session.user.role === 0;
+    const isAdminUser = isAdmin(session.user.role);
     const isAuthor = post.authorId === session.user.id;
 
-    if (!isAdmin && !isAuthor) {
+    if (!isAdminUser && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -130,10 +131,10 @@ export async function DELETE(
     }
 
     // Check permissions
-    const isAdmin = session.user.role === 1 || session.user.role === 0;
+    const isAdminUser = isAdmin(session.user.role);
     const isAuthor = post.authorId === session.user.id;
 
-    if (!isAdmin && !isAuthor) {
+    if (!isAdminUser && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -151,7 +152,7 @@ export async function DELETE(
       );
     }
 
-    if (isAdmin) {
+    if (isAdminUser) {
       // Admins can hard delete
       await prisma.$transaction(async (tx) => {
         await tx.ez_forum_posts.delete({

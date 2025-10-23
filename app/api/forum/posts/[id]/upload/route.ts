@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { uploadForumImage, extractFileFromFormData } from "@/lib/blob-upload";
+import { isAdmin } from "@/lib/forum-auth";
 
 // POST - Upload image attachment to post
 export async function POST(
@@ -25,10 +26,10 @@ export async function POST(
     }
 
     // Check if user can upload (must be post author or admin)
-    const isAdmin = session.user.role === 1 || session.user.role === 0;
+    const isAdminUser = isAdmin(session.user.role);
     const isAuthor = post.authorId === session.user.id;
 
-    if (!isAdmin && !isAuthor) {
+    if (!isAdminUser && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

@@ -2,12 +2,13 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import AdminCategoriesManager from "./AdminCategoriesManager";
+import { isAdmin } from "@/lib/forum-auth";
 
 export default async function ForumAdminPage() {
   const session = await auth();
 
-  // Check if user is admin (role 1 or 0)
-  if (!session?.user || (session.user.role !== 1 && session.user.role !== 0)) {
+  // Check if user is admin (role 0, 1, or 5)
+  if (!session?.user || !isAdmin(session.user.role)) {
     redirect("/forum");
   }
 
