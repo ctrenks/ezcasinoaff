@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { sendTopicReplyNotification } from "@/lib/forum-email";
 
 // POST - Create new post (reply to topic)
 export async function POST(request: NextRequest) {
@@ -24,6 +25,25 @@ export async function POST(request: NextRequest) {
     // Verify topic exists and is not locked
     const topic = await prisma.ez_forum_topics.findUnique({
       where: { id: topicId },
+      include: {
+        followers: {
+          where: {
+            emailNotifications: true,
+            NOT: {
+              userId: session.user.id, // Don't notify the person posting
+            },
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!topic) {
@@ -66,7 +86,45 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Auto-follow the topic for the replier (if not already following)
+      await tx.ez_forum_topic_followers.upsert({
+        where: {
+          topicId_userId: {
+            topicId,
+            userId: session.user.id,
+          },
+        },
+        create: {
+          topicId,
+          userId: session.user.id,
+          emailNotifications: true,
+        },
+        update: {}, // Do nothing if already following
+      });
+
       return post;
+    });
+
+    // Send email notifications to followers (asynchronously)
+    const replierName = session.user.name || "A forum user";
+    topic.followers.forEach(async (follower) => {
+      try {
+        await sendTopicReplyNotification({
+          recipientEmail: follower.user.email,
+          recipientName: follower.user.name || "Forum User",
+          replierName,
+          topicTitle: topic.title,
+          topicSlug: topic.slug,
+          replyContent: content,
+          unsubscribeToken: follower.unsubscribeToken,
+        });
+      } catch (error) {
+        console.error(
+          `Failed to send topic reply notification to ${follower.user.email}:`,
+          error
+        );
+        // Don't fail the request if email fails
+      }
     });
 
     return NextResponse.json({ post: result }, { status: 201 });

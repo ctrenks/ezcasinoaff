@@ -40,6 +40,7 @@ model User {
   forumPosts         ez_forum_posts[]
   sentMessages       ez_forum_private_messages[]     @relation("SentMessages")
   messageParticipants ez_forum_message_participants[]
+  topicFollowers     ez_forum_topic_followers[]
 }
 
 model Account {
@@ -1169,6 +1170,7 @@ model ez_forum_topics {
   category        ez_forum_categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
   posts           ez_forum_posts[]
+  followers       ez_forum_topic_followers[]
 
   @@index([categoryId])
   @@index([authorId])
@@ -1248,4 +1250,23 @@ model ez_forum_message_participants {
   @@index([messageId])
   @@index([isRead])
   @@index([isDeleted])
+}
+
+model ez_forum_topic_followers {
+  id          String            @id @default(cuid())
+  topicId     String
+  userId      String
+  createdAt   DateTime          @default(now())
+
+  // Notification preferences
+  emailNotifications Boolean       @default(true)
+  unsubscribeToken   String        @unique @default(cuid())
+
+  topic       ez_forum_topics   @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, userId])
+  @@index([userId])
+  @@index([topicId])
+  @@index([unsubscribeToken])
 }

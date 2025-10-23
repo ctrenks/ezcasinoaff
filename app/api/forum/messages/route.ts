@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { sendPMNotification } from "@/lib/forum-email";
 
 // GET - List user's messages (inbox)
 export async function GET(request: NextRequest) {
@@ -116,7 +117,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { recipientIds, subject, content } = body;
+    let { recipientId, recipientIds, subject, content } = body;
+
+    // Support both single recipientId and multiple recipientIds
+    if (recipientId && !recipientIds) {
+      recipientIds = [recipientId];
+    }
 
     if (
       !recipientIds ||
@@ -136,12 +142,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify all recipients exist
+    // Verify all recipients exist and get their email addresses
     const recipients = await prisma.user.findMany({
       where: {
         id: { in: recipientIds },
       },
-      select: { id: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
 
     if (recipients.length !== recipientIds.length) {
@@ -193,6 +203,26 @@ export async function POST(request: NextRequest) {
           },
         },
       },
+    });
+
+    // Send email notifications to recipients (asynchronously)
+    const senderName = session.user.name || "A forum user";
+    recipients.forEach(async (recipient) => {
+      try {
+        await sendPMNotification({
+          recipientEmail: recipient.email,
+          recipientName: recipient.name || "Forum User",
+          senderName,
+          messageSubject: subject,
+          messageId: message.id,
+        });
+      } catch (error) {
+        console.error(
+          `Failed to send PM notification to ${recipient.email}:`,
+          error
+        );
+        // Don't fail the request if email fails
+      }
     });
 
     return NextResponse.json({ message }, { status: 201 });

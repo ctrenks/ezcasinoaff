@@ -88,6 +88,14 @@ export default function TopicView({
                       Super Admin
                     </span>
                   )}
+                  {session?.user && session.user.id !== post.author.id && (
+                    <Link
+                      href={`/forum/messages/compose?to=${post.author.id}`}
+                      className="mt-3 text-xs bg-purple-600 text-white px-3 py-1.5 rounded hover:bg-purple-700 transition inline-block"
+                    >
+                      📧 Send PM
+                    </Link>
+                  )}
                 </div>
               </div>
 

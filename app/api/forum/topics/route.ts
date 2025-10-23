@@ -135,6 +135,15 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Auto-follow the topic for the author
+      await tx.ez_forum_topic_followers.create({
+        data: {
+          topicId: topic.id,
+          userId: session.user.id,
+          emailNotifications: true,
+        },
+      });
+
       return topic;
     });
 
