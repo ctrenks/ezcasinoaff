@@ -154,17 +154,16 @@ export default async function ForumPage() {
       </div>
 
       {/* Admin Link */}
-      {session?.user &&
-        (session.user.role === 1 || session.user.role === 0) && (
-          <div className="mt-8 text-center">
-            <Link
-              href="/forum/admin"
-              className="text-purple-600 hover:text-purple-800 font-semibold"
-            >
-              ⚙️ Admin Panel
-            </Link>
-          </div>
-        )}
+      {session?.user && session.user.role === 5 && (
+        <div className="mt-8 text-center">
+          <Link
+            href="/forum/admin"
+            className="text-purple-600 hover:text-purple-800 font-semibold"
+          >
+            ⚙️ Admin Panel
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

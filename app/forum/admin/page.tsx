@@ -7,7 +7,7 @@ import { isAdmin } from "@/lib/forum-auth";
 export default async function ForumAdminPage() {
   const session = await auth();
 
-  // Check if user is admin (role 0, 1, or 5)
+  // Check if user is admin (role 5 only)
   if (!session?.user || !isAdmin(session.user.role)) {
     redirect("/forum");
   }

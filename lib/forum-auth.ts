@@ -1,10 +1,10 @@
 /**
  * Check if a user has admin privileges
- * Admin roles: 0, 1, or 5
+ * Admin role: 5 (Super Admin on both sites)
  */
 export function isAdmin(role: number | undefined | null): boolean {
-  if (!role && role !== 0) return false;
-  return role === 0 || role === 1 || role === 5;
+  if (role === null || role === undefined) return false;
+  return role === 5;
 }
 
 /**

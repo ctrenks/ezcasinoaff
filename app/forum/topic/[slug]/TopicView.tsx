@@ -83,9 +83,9 @@ export default function TopicView({
                   <div className="font-semibold text-gray-900">
                     {post.author.name || "Anonymous"}
                   </div>
-                  {post.author.role === 1 && (
+                  {post.author.role === 5 && (
                     <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded mt-2 inline-block">
-                      Admin
+                      Super Admin
                     </span>
                   )}
                 </div>
@@ -104,8 +104,7 @@ export default function TopicView({
                   </div>
                   {session?.user &&
                     (session.user.id === post.author.id ||
-                      session.user.role === 1 ||
-                      session.user.role === 0) && (
+                      session.user.role === 5) && (
                       <div className="flex gap-2">
                         <button
                           className="text-xs text-purple-600 hover:underline"

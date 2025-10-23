@@ -108,10 +108,11 @@ Both applications:
 
 ## User Roles
 
-- **Role 1**: Operator access (allmediamatter.com only)
-- **Role 2**: Webmaster access (excasinoaff.com only)
+- **Role 5**: Super Admin (both sites - full administrative access)
+- **Role 2**: Regular user (default for both sites)
+- **Role 1**: Basic user on allmediamatter.com (not admin)
 
-Users are filtered by role in each application.
+Users are differentiated by `siteId` field ("ez" for EZ Casino Affiliates, "amm" for All Media Matter).
 
 ## Development
 
@@ -160,5 +161,3 @@ The webmaster portal uses port **3001** by default. If it's in use:
 ```bash
 pnpm dev -- -p 3002
 ```
-
-

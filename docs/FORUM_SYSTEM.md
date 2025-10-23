@@ -67,7 +67,7 @@ A comprehensive forum system has been built for EZ Casino Affiliates with suppor
 - Message inbox with unread count
 - Profile-based messaging
 
-### Admin Features (role 1 or 0)
+### Admin Features (role 5 - Super Admin)
 
 - Create, edit, delete forum categories
 - Activate/deactivate categories
