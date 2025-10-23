@@ -70,6 +70,8 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
       if (response.ok) {
         setMessage("Profile updated successfully!");
+        // Refresh the page to update the session
+        router.refresh();
       } else {
         setMessage("Failed to update profile. Please try again.");
       }
