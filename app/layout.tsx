@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import Navigation from "@/components/Navigation";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,84 +35,7 @@ export default async function WebmasterLayout({
                   </span>
                 </div>
 
-                <nav className="flex items-center space-x-6">
-                  <Link href="/" className="hover:text-purple-300 transition">
-                    Home
-                  </Link>
-                  <Link
-                    href="/casinos"
-                    className="hover:text-purple-300 transition"
-                  >
-                    Casinos
-                  </Link>
-                  <Link
-                    href="/affiliates"
-                    className="hover:text-purple-300 transition"
-                  >
-                    Affiliate Programs
-                  </Link>
-                  <Link
-                    href="/casino-operators"
-                    className="hover:text-orange-300 transition text-orange-400"
-                  >
-                    Casino Operators
-                  </Link>
-                  <Link
-                    href="/wp-plugin"
-                    className="hover:text-purple-300 transition"
-                  >
-                    WP Plugin
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className="hover:text-purple-300 transition"
-                  >
-                    Pricing
-                  </Link>
-                  {session?.user ? (
-                    <>
-                      <Link
-                        href="/profile/sites"
-                        className="hover:text-purple-300 transition"
-                      >
-                        My Sites
-                      </Link>
-                      <Link
-                        href="/profile/credits"
-                        className="hover:text-purple-300 transition"
-                      >
-                        Credits
-                      </Link>
-                      <Link
-                        href="/profile"
-                        className="hover:text-purple-300 transition"
-                      >
-                        Profile
-                      </Link>
-                      <Link
-                        href="/api/auth/signout"
-                        className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
-                      >
-                        Sign Out
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link
-                        href="/auth/signin"
-                        className="hover:text-purple-300 transition"
-                      >
-                        Sign In
-                      </Link>
-                      <Link
-                        href="/auth/signin"
-                        className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition"
-                      >
-                        Get Started
-                      </Link>
-                    </>
-                  )}
-                </nav>
+                <Navigation session={session} />
               </div>
             </div>
           </header>
