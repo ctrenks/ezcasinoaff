@@ -40,15 +40,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: async ({ user, account }) => {
       // Set default role and generate API key for new users
       if (user && user.id) {
-        // Check if this is a new user (no role or API key set)
+        // Check if this is a new user (no role, API key, or siteId set)
         const existingUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { role: true, apiKey: true },
+          select: { role: true, apiKey: true, siteId: true },
         });
 
-        // If user exists but missing role or apiKey, update them
+        // If user exists but missing role, apiKey, or siteId, update them
         if (existingUser) {
-          const updates: { role?: number; apiKey?: string } = {};
+          const updates: { role?: number; apiKey?: string; siteId?: string } =
+            {};
 
           if (!existingUser.role) {
             updates.role = 2; // Webmaster role
@@ -56,6 +57,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           if (!existingUser.apiKey) {
             updates.apiKey = generateDemoApiKey();
+          }
+
+          // Set siteId to "ez" for EZ Casino Affiliates
+          if (!existingUser.siteId) {
+            updates.siteId = "ez";
           }
 
           // Only update if there are changes

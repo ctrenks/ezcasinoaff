@@ -20,6 +20,7 @@ model User {
   updatedAt     DateTime        @updatedAt
   role          Int             @default(1)
   apiKey        String?         @unique
+  siteId        String?         @default("ez") // "ez" for EZ Casino Aff, "amm" for AllMediaMatter
   accounts      Account[]
   Authenticator Authenticator[]
   bids          Bid[]
@@ -33,6 +34,12 @@ model User {
   radiumCredit      RadiumCredit?
   radiumTransactions RadiumTransaction[]
   radiumUsage       RadiumUsage[]
+
+  // Forum relations
+  forumTopics        ez_forum_topics[]
+  forumPosts         ez_forum_posts[]
+  sentMessages       ez_forum_private_messages[]     @relation("SentMessages")
+  messageParticipants ez_forum_message_participants[]
 }
 
 model Account {
@@ -1122,4 +1129,123 @@ model rad_generator_sentence {
   sentence_subtype_reverse Int    @default(0)
   sentence_text            String @default("")
   sentence_active          Int    @default(0)
+}
+
+// Forum System Tables with ez_ prefix
+
+model ez_forum_categories {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  description String?
+  icon        String?           // emoji or icon name
+  displayOrder Int              @default(0)
+  isActive    Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  topics      ez_forum_topics[]
+
+  @@index([slug])
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+model ez_forum_topics {
+  id              String              @id @default(cuid())
+  categoryId      String
+  authorId        String
+  title           String
+  slug            String              @unique
+  isPinned        Boolean             @default(false)
+  isLocked        Boolean             @default(false)
+  viewCount       Int                 @default(0)
+  replyCount      Int                 @default(0)
+  lastReplyAt     DateTime?
+  lastReplyUserId String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  category        ez_forum_categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author          User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  posts           ez_forum_posts[]
+
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([slug])
+  @@index([isPinned, lastReplyAt])
+  @@index([createdAt])
+}
+
+model ez_forum_posts {
+  id          String              @id @default(cuid())
+  topicId     String
+  authorId    String
+  content     String              @db.Text
+  isEdited    Boolean             @default(false)
+  editedAt    DateTime?
+  editedBy    String?
+  isDeleted   Boolean             @default(false)
+  deletedAt   DateTime?
+  deletedBy   String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  topic       ez_forum_topics     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  author      User                @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  attachments ez_forum_attachments[]
+
+  @@index([topicId])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([isDeleted])
+}
+
+model ez_forum_attachments {
+  id          String          @id @default(cuid())
+  postId      String
+  url         String          // Vercel Blob URL
+  filename    String
+  mimeType    String
+  size        Int             // bytes
+  width       Int?            // for images
+  height      Int?            // for images
+  createdAt   DateTime        @default(now())
+
+  post        ez_forum_posts  @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+}
+
+model ez_forum_private_messages {
+  id          String                           @id @default(cuid())
+  senderId    String
+  subject     String
+  content     String                           @db.Text
+  createdAt   DateTime                         @default(now())
+
+  sender      User                             @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  participants ez_forum_message_participants[]
+
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model ez_forum_message_participants {
+  id          String                    @id @default(cuid())
+  messageId   String
+  userId      String
+  isRead      Boolean                   @default(false)
+  readAt      DateTime?
+  isDeleted   Boolean                   @default(false)
+  deletedAt   DateTime?
+
+  message     ez_forum_private_messages @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user        User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([userId])
+  @@index([messageId])
+  @@index([isRead])
+  @@index([isDeleted])
 }

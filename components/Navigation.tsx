@@ -24,6 +24,9 @@ export default function Navigation({ session }: NavigationProps) {
         <Link href="/affiliates" className="hover:text-purple-300 transition">
           Affiliate Programs
         </Link>
+        <Link href="/forum" className="hover:text-purple-300 transition">
+          Forum
+        </Link>
         <Link
           href="/casino-operators"
           className="hover:text-orange-300 transition text-orange-400"
@@ -62,7 +65,10 @@ export default function Navigation({ session }: NavigationProps) {
           </>
         ) : (
           <>
-            <Link href="/auth/signin" className="hover:text-purple-300 transition">
+            <Link
+              href="/auth/signin"
+              className="hover:text-purple-300 transition"
+            >
               Sign In
             </Link>
             <Link
@@ -165,6 +171,13 @@ export default function Navigation({ session }: NavigationProps) {
                   Affiliate Programs
                 </Link>
                 <Link
+                  href="/forum"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-white text-xl py-3 px-4 rounded-lg hover:bg-purple-800 transition"
+                >
+                  Forum
+                </Link>
+                <Link
                   href="/casino-operators"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-orange-400 text-xl py-3 px-4 rounded-lg hover:bg-orange-900 transition"
@@ -249,4 +262,3 @@ export default function Navigation({ session }: NavigationProps) {
     </>
   );
 }
-
