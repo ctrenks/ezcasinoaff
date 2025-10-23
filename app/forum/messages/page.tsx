@@ -19,12 +19,20 @@ export default async function MessagesPage() {
             Send and receive private messages with other forum members
           </p>
         </div>
-        <Link
-          href="/forum"
-          className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
-        >
-          ← Back to Forum
-        </Link>
+        <div className="flex gap-3">
+          <Link
+            href="/forum/messages/compose"
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition font-semibold"
+          >
+            ✍️ Compose
+          </Link>
+          <Link
+            href="/forum"
+            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
+          >
+            ← Back to Forum
+          </Link>
+        </div>
       </div>
 
       <MessagesInbox />
