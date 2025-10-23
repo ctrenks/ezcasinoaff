@@ -20,7 +20,7 @@ export default function CasinoOperatorsPage() {
         </p>
         <div className="flex gap-4 justify-center">
           <a
-            href="https://www.allmedidamatter.com"
+            href="https://allmediamatter.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition"
@@ -396,7 +396,7 @@ export default function CasinoOperatorsPage() {
         </p>
         <div className="flex gap-4 justify-center">
           <a
-            href="https://www.allmedidamatter.com"
+            href="https://allmediamatter.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-white text-orange-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition"
