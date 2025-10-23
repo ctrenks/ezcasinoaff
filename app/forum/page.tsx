@@ -2,18 +2,43 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import { formatRelativeTime } from "@/lib/forum-utils";
 import { isAdmin } from "@/lib/forum-auth";
+import { prisma } from "@/lib/prisma";
 
 async function getCategories() {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXTAUTH_URL || "http://localhost:3001"
-      }/api/forum/categories`,
-      { cache: "no-store" }
-    );
-    if (!response.ok) return { categories: [] };
-    const data = await response.json();
-    return data;
+    const categories = await prisma.ez_forum_categories.findMany({
+      where: { isActive: true },
+      orderBy: { displayOrder: "asc" },
+      include: {
+        _count: {
+          select: { topics: true },
+        },
+        topics: {
+          where: {
+            isLocked: false,
+          },
+          orderBy: {
+            lastReplyAt: "desc",
+          },
+          take: 1,
+          select: {
+            id: true,
+            title: true,
+            lastReplyAt: true,
+            lastReplyUserId: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { categories };
   } catch (error) {
     console.error("Error fetching categories:", error);
     return { categories: [] };

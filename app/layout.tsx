@@ -29,14 +29,9 @@ export default async function WebmasterLayout({
               <div className="flex justify-between items-center py-3 border-b border-purple-700/30">
                 <Link href="/" className="flex items-center gap-3">
                   <Logo className="h-10 w-auto" />
-                  <div className="flex flex-col">
-                    <span className="text-lg font-bold text-white leading-tight">
-                      Casino Affiliates
-                    </span>
-                    <span className="text-purple-300 text-xs">
-                      Webmaster Portal
-                    </span>
-                  </div>
+                  <span className="text-lg font-bold text-white">
+                    EZ Casino Affiliates
+                  </span>
                 </Link>
 
                 <nav className="hidden lg:flex items-center space-x-6">

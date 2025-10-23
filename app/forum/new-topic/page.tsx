@@ -1,18 +1,22 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import NewTopicForm from "./NewTopicForm";
+import { prisma } from "@/lib/prisma";
 
 async function getCategories() {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXTAUTH_URL || "http://localhost:3001"
-      }/api/forum/categories`,
-      { cache: "no-store" }
-    );
-    if (!response.ok) return { categories: [] };
-    const data = await response.json();
-    return data;
+    const categories = await prisma.ez_forum_categories.findMany({
+      where: { isActive: true },
+      orderBy: { displayOrder: "asc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        icon: true,
+      },
+    });
+
+    return { categories };
   } catch (error) {
     console.error("Error fetching categories:", error);
     return { categories: [] };

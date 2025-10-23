@@ -2,18 +2,19 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatRelativeTime } from "@/lib/forum-utils";
+import { prisma } from "@/lib/prisma";
 
 async function getCategory(slug: string) {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXTAUTH_URL || "http://localhost:3001"
-      }/api/forum/categories`,
-      { cache: "no-store" }
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.categories.find((c: any) => c.slug === slug);
+    const category = await prisma.ez_forum_categories.findUnique({
+      where: { slug },
+      include: {
+        _count: {
+          select: { topics: true },
+        },
+      },
+    });
+    return category;
   } catch (error) {
     console.error("Error fetching category:", error);
     return null;
@@ -22,18 +23,35 @@ async function getCategory(slug: string) {
 
 async function getTopics(categoryId: string) {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXTAUTH_URL || "http://localhost:3001"
-      }/api/forum/topics?categoryId=${categoryId}`,
-      { cache: "no-store" }
-    );
-    if (!response.ok) return { topics: [], pagination: {} };
-    const data = await response.json();
-    return data;
+    const topics = await prisma.ez_forum_topics.findMany({
+      where: { categoryId },
+      orderBy: [{ isPinned: "desc" }, { lastReplyAt: "desc" }],
+      take: 20,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        _count: {
+          select: { posts: true },
+        },
+      },
+    });
+
+    return { topics };
   } catch (error) {
     console.error("Error fetching topics:", error);
-    return { topics: [], pagination: {} };
+    return { topics: [] };
   }
 }
 

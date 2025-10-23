@@ -2,18 +2,85 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import TopicView from "./TopicView";
+import { prisma } from "@/lib/prisma";
 
-async function getTopic(slug: string) {
+async function getTopic(slug: string, page: number = 1) {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXTAUTH_URL || "http://localhost:3001"
-      }/api/forum/topics/${slug}`,
-      { cache: "no-store" }
-    );
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data;
+    const limit = 20;
+    const skip = (page - 1) * limit;
+
+    // Get topic
+    const topic = await prisma.ez_forum_topics.findUnique({
+      where: { slug },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+    });
+
+    if (!topic) return null;
+
+    // Increment view count
+    await prisma.ez_forum_topics.update({
+      where: { id: topic.id },
+      data: { viewCount: { increment: 1 } },
+    });
+
+    // Get posts
+    const [posts, totalPosts] = await Promise.all([
+      prisma.ez_forum_posts.findMany({
+        where: {
+          topicId: topic.id,
+          isDeleted: false,
+        },
+        orderBy: { createdAt: "asc" },
+        skip,
+        take: limit,
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              role: true,
+            },
+          },
+          attachments: true,
+        },
+      }),
+      prisma.ez_forum_posts.count({
+        where: {
+          topicId: topic.id,
+          isDeleted: false,
+        },
+      }),
+    ]);
+
+    return {
+      topic: {
+        ...topic,
+        viewCount: topic.viewCount + 1,
+      },
+      posts,
+      pagination: {
+        page,
+        limit,
+        total: totalPosts,
+        totalPages: Math.ceil(totalPosts / limit),
+      },
+    };
   } catch (error) {
     console.error("Error fetching topic:", error);
     return null;
@@ -28,7 +95,8 @@ export default async function TopicPage({
   searchParams: { page?: string };
 }) {
   const session = await auth();
-  const data = await getTopic(params.slug);
+  const page = parseInt(searchParams.page || "1");
+  const data = await getTopic(params.slug, page);
 
   if (!data || !data.topic) {
     notFound();
