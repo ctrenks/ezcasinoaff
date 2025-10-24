@@ -39,50 +39,71 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     signIn: async ({ user, account }) => {
       // Set default role and generate API key for new users
+      // Note: For NEW users, the PrismaAdapter creates them AFTER this callback
+      // So we wrap in try-catch to handle both new and existing users gracefully
       if (user && user.id) {
-        // Check if this is a new user (no role or API key set)
-        const existingUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { role: true, apiKey: true, ezcasino: true, allmedia: true },
-        });
+        try {
+          // Try to find existing user
+          const existingUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { role: true, apiKey: true, ezcasino: true, allmedia: true },
+          });
 
-        // If user exists but missing role or apiKey, update them
-        if (existingUser) {
-          const updates: {
-            role?: number;
-            apiKey?: string;
-            ezcasino?: boolean;
-          } = {};
+          // If user exists, update their fields if needed
+          if (existingUser) {
+            const updates: {
+              role?: number;
+              apiKey?: string;
+              ezcasino?: boolean;
+            } = {};
 
-          if (!existingUser.role) {
-            updates.role = 2; // Webmaster role
+            if (!existingUser.role) {
+              updates.role = 2; // Webmaster role
+            }
+
+            if (!existingUser.apiKey) {
+              updates.apiKey = generateDemoApiKey();
+            }
+
+            // Grant access to EZ Casino Affiliates (this site) if not already set
+            if (!existingUser.ezcasino) {
+              updates.ezcasino = true;
+            }
+
+            // Note: allmedia flag would be set when they log into allmediamatter.com
+
+            // Only update if there are changes
+            if (Object.keys(updates).length > 0) {
+              await prisma.user.update({
+                where: { id: user.id },
+                data: updates,
+              });
+            }
           }
-
-          if (!existingUser.apiKey) {
-            updates.apiKey = generateDemoApiKey();
-          }
-
-          // Grant access to EZ Casino Affiliates (this site) if not already set
-          // This allows users to gain access to this site on first login
-          if (!existingUser.ezcasino) {
-            updates.ezcasino = true;
-          }
-
-          // Note: allmedia flag would be set when they log into allmediamatter.com
-
-          // Only update if there are changes
-          if (Object.keys(updates).length > 0) {
-            await prisma.user.update({
-              where: { id: user.id },
-              data: updates,
-            });
-          }
+        } catch (error) {
+          // Silently handle errors for new users during first sign-in
+          // The PrismaAdapter will create the user with default values
+          console.log("Sign-in callback: User not yet created, will be created by adapter");
         }
       }
       return true;
     },
     session: async ({ session, user }) => {
       if (session?.user) {
+        // Generate API key if user doesn't have one
+        if (!user.apiKey) {
+          try {
+            const apiKey = generateDemoApiKey();
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { apiKey },
+            });
+            user.apiKey = apiKey;
+          } catch (error) {
+            console.error("Failed to generate API key:", error);
+          }
+        }
+
         session.user.id = user.id;
         session.user.role = user.role;
         session.user.apiKey = user.apiKey;

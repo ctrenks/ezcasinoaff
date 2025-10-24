@@ -18,9 +18,9 @@ model User {
   image         String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  role          Int             @default(1)
+  role          Int             @default(2)     // Default to role 2 (webmaster/regular user)
   apiKey        String?         @unique
-
+  
   // Site access flags - users can have access to both sites
   ezcasino      Boolean         @default(true)  // Access to EZ Casino Affiliates
   allmedia      Boolean         @default(false) // Access to All Media Matter
