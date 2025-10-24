@@ -22,6 +22,8 @@ export default function TopicView({
   const router = useRouter();
   const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editContent, setEditContent] = useState("");
   const isAdmin = session?.user?.role === 5;
 
   const handleTogglePin = async () => {
@@ -65,6 +67,55 @@ export default function TopicView({
       router.refresh();
     } catch (error: any) {
       toast.error(error.message || "Failed to toggle lock");
+    }
+  };
+
+  const handleEditPost = async (postId: string) => {
+    if (!editContent.trim()) {
+      toast.error("Post content cannot be empty");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/forum/posts/${postId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: editContent }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to update post");
+      }
+
+      toast.success("Post updated successfully!");
+      setEditingPostId(null);
+      setEditContent("");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update post");
+    }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/forum/posts/${postId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to delete post");
+      }
+
+      toast.success("Post deleted successfully!");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete post");
     }
   };
 
@@ -193,8 +244,8 @@ export default function TopicView({
                         <button
                           className="text-xs text-purple-600 hover:underline"
                           onClick={() => {
-                            // TODO: Implement edit functionality
-                            toast("Edit functionality coming soon!");
+                            setEditingPostId(post.id);
+                            setEditContent(post.content);
                           }}
                         >
                           Edit
@@ -202,10 +253,7 @@ export default function TopicView({
                         {index !== 0 && (
                           <button
                             className="text-xs text-red-600 hover:underline"
-                            onClick={() => {
-                              // TODO: Implement delete functionality
-                              toast("Delete functionality coming soon!");
-                            }}
+                            onClick={() => handleDeletePost(post.id)}
                           >
                             Delete
                           </button>
@@ -214,10 +262,38 @@ export default function TopicView({
                     )}
                 </div>
 
-                <div
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: post.content }}
-                />
+                {editingPostId === post.id ? (
+                  <div className="space-y-3">
+                    <textarea
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      rows={8}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditPost(post.id)}
+                        className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition text-sm font-semibold"
+                      >
+                        Save Changes
+                      </button>
+                      <button
+                        onClick={() => {
+                          setEditingPostId(null);
+                          setEditContent("");
+                        }}
+                        className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition text-sm font-semibold"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                  />
+                )}
 
                 {/* Attachments */}
                 {post.attachments && post.attachments.length > 0 && (

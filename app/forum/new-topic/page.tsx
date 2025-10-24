@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import NewTopicForm from "./NewTopicForm";
 import { prisma } from "@/lib/prisma";
 
