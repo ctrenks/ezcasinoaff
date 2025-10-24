@@ -1,6 +1,10 @@
 import { forumMailer, FORUM_FROM_EMAIL, FORUM_FROM_NAME } from "./nodemailer";
 
-const SITE_URL = process.env.NEXTAUTH_URL || "https://www.ezcasinoaff.com";
+// Use NEXT_PUBLIC_SITE_URL for emails, not NEXTAUTH_URL (which may include /api/auth)
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  process.env.NEXTAUTH_URL?.replace(/\/api\/auth$/, "") ||
+  "https://www.ezcasinoaff.com";
 
 interface SendPMNotificationParams {
   recipientEmail: string;

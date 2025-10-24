@@ -43,6 +43,9 @@ The forum system now includes a comprehensive email notification system that ale
 Add these environment variables to your `.env.local` file:
 
 ```env
+# Site URL for email links (IMPORTANT: Must be the base URL without /api/auth)
+NEXT_PUBLIC_SITE_URL=https://www.ezcasinoaff.com
+
 # Forum Email Notifications (Nodemailer SMTP)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
@@ -52,6 +55,8 @@ SMTP_PASS=your-app-password
 FORUM_FROM_EMAIL=noreply@ezcasinoaff.com
 FORUM_FROM_NAME="EZ Casino Affiliates Forum"
 ```
+
+**⚠️ IMPORTANT**: The `NEXT_PUBLIC_SITE_URL` should be your base site URL (e.g., `https://www.ezcasinoaff.com`) **without** any path like `/api/auth`. This is used to generate correct links in email notifications.
 
 ### SMTP Provider Examples
 
