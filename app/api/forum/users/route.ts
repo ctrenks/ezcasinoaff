@@ -10,13 +10,33 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get all users with ez siteId (forum users)
-    const users = await prisma.user.findMany({
+    // Get all users who have participated in the EZ forum
+    // (regardless of their current siteId, since it changes on each login)
+    const forumParticipants = await prisma.user.findMany({
       where: {
-        siteId: "ez",
-        NOT: {
-          id: session.user.id, // Exclude current user
-        },
+        AND: [
+          {
+            NOT: {
+              id: session.user.id, // Exclude current user
+            },
+          },
+          {
+            OR: [
+              // Users who have created topics
+              {
+                forumTopics: {
+                  some: {},
+                },
+              },
+              // Users who have created posts
+              {
+                forumPosts: {
+                  some: {},
+                },
+              },
+            ],
+          },
+        ],
       },
       select: {
         id: true,
@@ -27,6 +47,27 @@ export async function GET() {
         name: "asc",
       },
     });
+
+    // Also include all users for PM selection (they might want to message someone who hasn't posted yet)
+    const allUsers = await prisma.user.findMany({
+      where: {
+        NOT: {
+          id: session.user.id,
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+      take: 100, // Limit to prevent overwhelming the dropdown
+    });
+
+    // Use all users for better UX
+    const users = allUsers;
 
     return NextResponse.json({ users });
   } catch (error: any) {

@@ -40,16 +40,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: async ({ user, account }) => {
       // Set default role and generate API key for new users
       if (user && user.id) {
-        // Check if this is a new user (no role, API key, or siteId set)
+        // Check if this is a new user (no role or API key set)
         const existingUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { role: true, apiKey: true, siteId: true },
+          select: { role: true, apiKey: true, ezcasino: true, allmedia: true },
         });
 
-        // If user exists but missing role, apiKey, or siteId, update them
+        // If user exists but missing role or apiKey, update them
         if (existingUser) {
-          const updates: { role?: number; apiKey?: string; siteId?: string } =
-            {};
+          const updates: {
+            role?: number;
+            apiKey?: string;
+            ezcasino?: boolean;
+          } = {};
 
           if (!existingUser.role) {
             updates.role = 2; // Webmaster role
@@ -59,10 +62,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             updates.apiKey = generateDemoApiKey();
           }
 
-          // Set siteId to "ez" for EZ Casino Affiliates
-          if (!existingUser.siteId) {
-            updates.siteId = "ez";
+          // Grant access to EZ Casino Affiliates (this site) if not already set
+          // This allows users to gain access to this site on first login
+          if (!existingUser.ezcasino) {
+            updates.ezcasino = true;
           }
+
+          // Note: allmedia flag would be set when they log into allmediamatter.com
 
           // Only update if there are changes
           if (Object.keys(updates).length > 0) {
@@ -81,6 +87,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = user.role;
         session.user.apiKey = user.apiKey;
         session.user.image = user.image;
+        session.user.ezcasino = user.ezcasino;
+        session.user.allmedia = user.allmedia;
       }
       return session;
     },

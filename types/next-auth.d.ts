@@ -9,6 +9,8 @@ declare module "next-auth" {
       role?: number;
       apiKey?: string;
       image?: string | null;
+      ezcasino?: boolean;
+      allmedia?: boolean;
     };
   }
 
@@ -19,6 +21,8 @@ declare module "next-auth" {
     role?: number;
     apiKey?: string;
     image?: string | null;
+    ezcasino?: boolean;
+    allmedia?: boolean;
   }
 }
 
