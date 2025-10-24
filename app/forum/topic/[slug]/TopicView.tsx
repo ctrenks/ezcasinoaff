@@ -22,6 +22,51 @@ export default function TopicView({
   const router = useRouter();
   const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isAdmin = session?.user?.role === 5;
+
+  const handleTogglePin = async () => {
+    try {
+      const response = await fetch(`/api/forum/topics/${topic.slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isPinned: !topic.isPinned,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to toggle pin");
+      }
+
+      toast.success(topic.isPinned ? "Topic unpinned" : "Topic pinned");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to toggle pin");
+    }
+  };
+
+  const handleToggleLock = async () => {
+    try {
+      const response = await fetch(`/api/forum/topics/${topic.slug}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isLocked: !topic.isLocked,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to toggle lock");
+      }
+
+      toast.success(topic.isLocked ? "Topic unlocked" : "Topic locked");
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to toggle lock");
+    }
+  };
 
   const handleReply = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +105,37 @@ export default function TopicView({
 
   return (
     <div className="space-y-6">
+      {/* Admin Controls */}
+      {isAdmin && (
+        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
+          <h3 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+            <span>⚙️</span> Admin Controls
+          </h3>
+          <div className="flex gap-3">
+            <button
+              onClick={handleTogglePin}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                topic.isPinned
+                  ? "bg-purple-600 text-white hover:bg-purple-700"
+                  : "bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50"
+              }`}
+            >
+              {topic.isPinned ? "📌 Unpin Topic" : "📌 Pin Topic"}
+            </button>
+            <button
+              onClick={handleToggleLock}
+              className={`px-4 py-2 rounded-lg font-semibold transition ${
+                topic.isLocked
+                  ? "bg-gray-600 text-white hover:bg-gray-700"
+                  : "bg-white text-gray-600 border-2 border-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {topic.isLocked ? "🔓 Unlock Topic" : "🔒 Lock Topic"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Posts */}
       <div className="space-y-4">
         {posts.map((post: any, index: number) => (
@@ -182,6 +258,19 @@ export default function TopicView({
             <p className="text-yellow-900">
               🔒 This topic is locked and cannot accept new replies.
             </p>
+          </div>
+        ) : !session?.user?.name || session.user.name.trim() === "" ? (
+          <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-6 text-center">
+            <p className="text-gray-700 mb-3">
+              ⚠️ You need to set a username in your profile before you can post
+              replies.
+            </p>
+            <Link
+              href="/profile"
+              className="inline-block bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition font-semibold text-sm"
+            >
+              Go to Profile
+            </Link>
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow p-6">

@@ -124,18 +124,30 @@ export default async function TopicPage({
 
       {/* Topic Header */}
       <div className="bg-white rounded-lg shadow p-6 mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          {topic.isPinned && (
-            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-semibold">
-              📌 PINNED
-            </span>
-          )}
-          {topic.isLocked && (
-            <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded font-semibold">
-              🔒 LOCKED
-            </span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            {topic.isPinned && (
+              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded font-semibold">
+                📌 PINNED
+              </span>
+            )}
+            {topic.isLocked && (
+              <span className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded font-semibold">
+                🔒 LOCKED
+              </span>
+            )}
+          </div>
+
+          {/* Admin Controls */}
+          {session?.user?.role === 5 && (
+            <div className="text-sm text-gray-600">
+              <span className="text-red-600 font-semibold">
+                ⚙️ Admin Controls
+              </span>
+            </div>
           )}
         </div>
+
         <h1 className="text-3xl font-bold text-gray-900">{topic.title}</h1>
         <div className="flex items-center gap-4 mt-4 text-sm text-gray-600">
           <span className="flex items-center gap-2">

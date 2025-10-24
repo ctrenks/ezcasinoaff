@@ -34,6 +34,30 @@ export default async function NewTopicPage({
     redirect("/auth/signin");
   }
 
+  // Check if user has set a username
+  if (!session.user.name || session.user.name.trim() === "") {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-8 text-center">
+          <div className="text-5xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Username Required
+          </h1>
+          <p className="text-gray-700 mb-6">
+            You need to set a username in your profile before you can create
+            forum topics.
+          </p>
+          <Link
+            href="/profile"
+            className="inline-block bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition font-semibold"
+          >
+            Go to Profile
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const { categories } = await getCategories();
 
   return (
