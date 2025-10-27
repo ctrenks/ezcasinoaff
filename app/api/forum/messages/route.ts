@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendPMNotification } from "@/lib/forum-email";
+import { createPMNotification } from "@/lib/notifications";
 
 // GET - List user's messages (inbox)
 export async function GET(request: NextRequest) {
@@ -205,10 +206,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send email notifications to recipients (asynchronously)
+    // Send email notifications and create in-app notifications for recipients (asynchronously)
     const senderName = session.user.name || "A forum user";
     recipients.forEach(async (recipient) => {
       try {
+        // Send email notification
         await sendPMNotification({
           recipientEmail: recipient.email,
           recipientName: recipient.name || "Forum User",
@@ -216,12 +218,20 @@ export async function POST(request: NextRequest) {
           messageSubject: subject,
           messageId: message.id,
         });
+
+        // Create in-app notification
+        await createPMNotification(
+          recipient.id,
+          senderName,
+          message.id,
+          subject
+        );
       } catch (error) {
         console.error(
           `Failed to send PM notification to ${recipient.email}:`,
           error
         );
-        // Don't fail the request if email fails
+        // Don't fail the request if email/notification fails
       }
     });
 

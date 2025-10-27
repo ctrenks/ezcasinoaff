@@ -207,6 +207,13 @@ export default function Navigation({ session }: NavigationProps) {
                       </p>
                     </div>
                     <Link
+                      href="/notifications"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-white text-xl py-3 px-4 rounded-lg hover:bg-purple-800 transition"
+                    >
+                      🔔 Notifications
+                    </Link>
+                    <Link
                       href="/profile/sites"
                       onClick={() => setMobileMenuOpen(false)}
                       className="block text-white text-xl py-3 px-4 rounded-lg hover:bg-purple-800 transition"

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import Navigation from "@/components/Navigation";
+import NotificationBell from "@/components/NotificationBell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -86,6 +87,7 @@ export default async function WebmasterLayout({
               <div className="hidden lg:flex justify-end items-center py-2.5 space-x-6 text-sm">
                 {session?.user ? (
                   <>
+                    <NotificationBell />
                     <Link
                       href="/profile/sites"
                       className="hover:text-purple-300 transition flex items-center gap-1"

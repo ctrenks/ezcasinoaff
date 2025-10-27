@@ -45,6 +45,9 @@ model User {
   sentMessages       ez_forum_private_messages[]     @relation("SentMessages")
   messageParticipants ez_forum_message_participants[]
   topicFollowers     ez_forum_topic_followers[]
+
+  // Notification relations
+  notifications      Notification[]
 }
 
 model Account {
@@ -1273,4 +1276,39 @@ model ez_forum_topic_followers {
   @@index([userId])
   @@index([topicId])
   @@index([unsubscribeToken])
+}
+
+// ===================================
+// Notification System
+// ===================================
+
+enum NotificationType {
+  PRIVATE_MESSAGE    // New PM received
+  TOPIC_REPLY        // Reply in followed topic
+  NEW_CASINO         // New casino added to database
+  NEW_GAME           // New game added to database
+  SYSTEM             // System announcements
+  SUBSCRIPTION       // Subscription updates
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String           // e.g., "New Private Message"
+  message   String           // e.g., "John sent you a message"
+  link      String?          // URL to navigate to when clicked
+  icon      String?          // Optional emoji or icon name
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  // Optional metadata for different notification types
+  metadata  Json?            // Store additional data (e.g., messageId, casinoId, etc.)
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@index([userId, isRead])
 }

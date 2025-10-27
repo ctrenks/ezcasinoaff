@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { sendTopicReplyNotification } from "@/lib/forum-email";
+import { createTopicReplyNotification } from "@/lib/notifications";
 
 // POST - Create new post (reply to topic)
 export async function POST(request: NextRequest) {
@@ -105,10 +106,11 @@ export async function POST(request: NextRequest) {
       return post;
     });
 
-    // Send email notifications to followers (asynchronously)
+    // Send email notifications and create in-app notifications for followers (asynchronously)
     const replierName = session.user.name || "A forum user";
     topic.followers.forEach(async (follower) => {
       try {
+        // Send email notification
         await sendTopicReplyNotification({
           recipientEmail: follower.user.email,
           recipientName: follower.user.name || "Forum User",
@@ -118,12 +120,20 @@ export async function POST(request: NextRequest) {
           replyContent: content,
           unsubscribeToken: follower.unsubscribeToken,
         });
+
+        // Create in-app notification
+        await createTopicReplyNotification(
+          follower.user.id,
+          replierName,
+          topic.title,
+          topic.slug
+        );
       } catch (error) {
         console.error(
           `Failed to send topic reply notification to ${follower.user.email}:`,
           error
         );
-        // Don't fail the request if email fails
+        // Don't fail the request if email/notification fails
       }
     });
 
