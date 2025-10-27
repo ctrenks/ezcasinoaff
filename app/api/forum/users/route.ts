@@ -10,9 +10,9 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get all users who have participated in the EZ forum
-    // (regardless of their current siteId, since it changes on each login)
-    const forumParticipants = await prisma.user.findMany({
+    // Get users with ezcasino access for PM selection
+    // Only show users who have access to the EZ Casino Affiliates site
+    const users = await prisma.user.findMany({
       where: {
         AND: [
           {
@@ -21,20 +21,7 @@ export async function GET() {
             },
           },
           {
-            OR: [
-              // Users who have created topics
-              {
-                forumTopics: {
-                  some: {},
-                },
-              },
-              // Users who have created posts
-              {
-                forumPosts: {
-                  some: {},
-                },
-              },
-            ],
+            ezcasino: true, // Only users with EZ Casino access
           },
         ],
       },
@@ -46,28 +33,8 @@ export async function GET() {
       orderBy: {
         name: "asc",
       },
-    });
-
-    // Also include all users for PM selection (they might want to message someone who hasn't posted yet)
-    const allUsers = await prisma.user.findMany({
-      where: {
-        NOT: {
-          id: session.user.id,
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-      },
-      orderBy: {
-        name: "asc",
-      },
       take: 100, // Limit to prevent overwhelming the dropdown
     });
-
-    // Use all users for better UX
-    const users = allUsers;
 
     return NextResponse.json({ users });
   } catch (error: any) {

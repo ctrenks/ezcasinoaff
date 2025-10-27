@@ -143,10 +143,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify all recipients exist and get their email addresses
+    // Verify all recipients exist, have ezcasino access, and get their email addresses
     const recipients = await prisma.user.findMany({
       where: {
         id: { in: recipientIds },
+        ezcasino: true, // Only allow sending to users with EZ Casino access
       },
       select: {
         id: true,
@@ -157,7 +158,10 @@ export async function POST(request: NextRequest) {
 
     if (recipients.length !== recipientIds.length) {
       return NextResponse.json(
-        { error: "One or more recipients not found" },
+        {
+          error:
+            "One or more recipients not found or do not have access to this site",
+        },
         { status: 400 }
       );
     }
