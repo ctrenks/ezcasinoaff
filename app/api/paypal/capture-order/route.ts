@@ -133,44 +133,86 @@ export async function GET(req: NextRequest) {
 
       return redirect("/profile/sites?success=subscription_activated");
     } else if (customData.type === "credits") {
-      // Add credits to user account
+      // Add credits to user account based on payment type
       const creditAmount = customData.creditAmount || 0;
-
-      await prisma.radiumCredit.upsert({
-        where: { userId: session.user.id },
-        create: {
-          userId: session.user.id,
-          balance: creditAmount,
-          lifetime: creditAmount,
-        },
-        update: {
-          balance: {
-            increment: creditAmount,
-          },
-          lifetime: {
-            increment: creditAmount,
-          },
-        },
-      });
-
-      // Create transaction record
-      const credit = await prisma.radiumCredit.findUnique({
-        where: { userId: session.user.id },
-      });
-
-      if (credit) {
-        await prisma.radiumTransaction.create({
-          data: {
+      
+      // Check payment type to determine which credit system to use
+      if (payment.type === "USER_CREDITS") {
+        // Add User Credits (EZ Credits - payment currency)
+        await prisma.userCredit.upsert({
+          where: { userId: session.user.id },
+          create: {
             userId: session.user.id,
-            creditId: credit.id,
-            type: "PURCHASE",
-            amount: creditAmount,
-            balance: credit.balance,
-            cost: paymentAmount,
-            currency: "USD",
-            description: `Purchased ${creditAmount} credits via PayPal`,
+            balance: creditAmount,
+            lifetime: creditAmount,
+          },
+          update: {
+            balance: {
+              increment: creditAmount,
+            },
+            lifetime: {
+              increment: creditAmount,
+            },
           },
         });
+
+        // Create transaction record
+        const credit = await prisma.userCredit.findUnique({
+          where: { userId: session.user.id },
+        });
+
+        if (credit) {
+          await prisma.userCreditTransaction.create({
+            data: {
+              userId: session.user.id,
+              creditId: credit.id,
+              type: "PURCHASE",
+              amount: creditAmount,
+              balance: credit.balance,
+              cost: paymentAmount,
+              currency: "USD",
+              description: `Purchased ${creditAmount} User Credits (EZ Credits) via PayPal`,
+            },
+          });
+        }
+      } else {
+        // Add Radium Credits (AI review generation credits)
+        await prisma.radiumCredit.upsert({
+          where: { userId: session.user.id },
+          create: {
+            userId: session.user.id,
+            balance: creditAmount,
+            lifetime: creditAmount,
+          },
+          update: {
+            balance: {
+              increment: creditAmount,
+            },
+            lifetime: {
+              increment: creditAmount,
+            },
+          },
+        });
+
+        // Create transaction record
+        const credit = await prisma.radiumCredit.findUnique({
+          where: { userId: session.user.id },
+        });
+
+        if (credit) {
+          await prisma.radiumTransaction.create({
+            data: {
+              userId: session.user.id,
+              creditId: credit.id,
+              type: "PURCHASE",
+              amount: creditAmount,
+              balance: credit.balance,
+              cost: paymentAmount,
+              currency: "USD",
+              description: `Purchased ${creditAmount} Radium Credits via PayPal`,
+            },
+          });
+        }
       }
 
       return redirect("/profile/credits?success=credits_added");

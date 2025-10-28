@@ -42,15 +42,15 @@ export async function POST(req: NextRequest) {
     // Calculate required credits (1:1 ratio)
     const requiredCredits = Math.ceil(amount);
 
-    // Get user's current credit balance
-    const userCredit = await prisma.radiumCredit.findUnique({
+    // Get user's current User Credit balance (EZ Credits)
+    const userCredit = await prisma.userCredit.findUnique({
       where: { userId: session.user.id },
     });
 
     if (!userCredit || userCredit.balance < requiredCredits) {
       return NextResponse.json(
         {
-          error: "Insufficient credits",
+          error: "Insufficient User Credits (EZ Credits)",
           required: requiredCredits,
           available: userCredit?.balance || 0,
         },
@@ -100,8 +100,8 @@ export async function POST(req: NextRequest) {
 
       // Create transaction
       const result = await prisma.$transaction(async (tx) => {
-        // Deduct credits
-        const updatedCredit = await tx.radiumCredit.update({
+        // Deduct User Credits (EZ Credits)
+        const updatedCredit = await tx.userCredit.update({
           where: { userId: session.user.id },
           data: {
             balance: {
@@ -161,15 +161,14 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Create transaction record
-        await tx.radiumTransaction.create({
+        // Create User Credit transaction record
+        await tx.userCreditTransaction.create({
           data: {
             userId: session.user.id,
             creditId: userCredit.id,
             type: "USAGE",
             amount: -requiredCredits,
             balance: updatedCredit.balance,
-            siteId: site.id,
             description: `Subscription payment: ${planType} plan`,
           },
         });
@@ -209,10 +208,10 @@ export async function POST(req: NextRequest) {
         ...result,
       });
     } else if (type === "credits") {
-      // Purchase credits with credits (basically a conversion/bonus scenario)
+      // Purchase User Credits with User Credits (basically a conversion/bonus scenario)
       const result = await prisma.$transaction(async (tx) => {
         // Deduct payment credits
-        const updatedCredit = await tx.radiumCredit.update({
+        const updatedCredit = await tx.userCredit.update({
           where: { userId: session.user.id },
           data: {
             balance: {
@@ -222,19 +221,19 @@ export async function POST(req: NextRequest) {
         });
 
         // Create deduction transaction
-        await tx.radiumTransaction.create({
+        await tx.userCreditTransaction.create({
           data: {
             userId: session.user.id,
             creditId: userCredit.id,
             type: "USAGE",
             amount: -requiredCredits,
             balance: updatedCredit.balance,
-            description: `Credit pack purchase payment`,
+            description: `User Credit pack purchase payment`,
           },
         });
 
-        // Add purchased credits
-        const finalCredit = await tx.radiumCredit.update({
+        // Add purchased User Credits
+        const finalCredit = await tx.userCredit.update({
           where: { userId: session.user.id },
           data: {
             balance: {
@@ -247,7 +246,7 @@ export async function POST(req: NextRequest) {
         });
 
         // Create purchase transaction
-        await tx.radiumTransaction.create({
+        await tx.userCreditTransaction.create({
           data: {
             userId: session.user.id,
             creditId: userCredit.id,
@@ -256,7 +255,7 @@ export async function POST(req: NextRequest) {
             balance: finalCredit.balance,
             cost: amount,
             currency: "USD",
-            description: `Credit pack purchase: ${creditAmount} credits`,
+            description: `User Credit pack purchase: ${creditAmount} credits`,
           },
         });
 
@@ -267,8 +266,8 @@ export async function POST(req: NextRequest) {
             amount: amount,
             currency: "USD",
             status: "SUCCEEDED",
-            type: "RADIUM_CREDITS",
-            description: `${creditAmount} Radium Credits - Paid with Credits`,
+            type: "USER_CREDITS",
+            description: `${creditAmount} User Credits (EZ Credits) - Paid with Credits`,
             paidAt: new Date(),
           },
         });

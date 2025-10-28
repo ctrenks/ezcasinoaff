@@ -64,7 +64,7 @@ export default function CreditsDisplay() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          purchaseType: "credits",
+          purchaseType: "user_credits", // User Credits (EZ Credits - payment currency)
           itemName: selectedPack.name,
           amount: selectedPack.price,
           creditAmount: selectedPack.totalCredits,
@@ -149,13 +149,16 @@ export default function CreditsDisplay() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-purple-200 text-sm font-medium mb-1">
-              Available Credits
+              EZ Credits (Payment Currency)
             </p>
             <p className="text-5xl font-bold">
               {credits?.balance.toLocaleString() || 0}
             </p>
             <p className="text-purple-200 text-sm mt-2">
               Lifetime: {credits?.lifetime.toLocaleString() || 0} credits
+            </p>
+            <p className="text-purple-100 text-xs mt-1">
+              💵 1 EZ Credit = $1 USD
             </p>
           </div>
           <div className="text-6xl">💎</div>
@@ -164,9 +167,13 @@ export default function CreditsDisplay() {
 
       {/* Purchase Packs */}
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Purchase Credits
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Purchase EZ Credits
         </h2>
+        <p className="text-gray-600 text-sm mb-6">
+          Use EZ Credits to pay for subscriptions and other services. 1 Credit =
+          $1 USD
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {Object.values(CREDIT_PACKS).map((pack) => (
             <div
@@ -382,7 +389,7 @@ export default function CreditsDisplay() {
       {/* Recent Transactions */}
       <div className="bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Recent Transactions
+          Recent EZ Credits Transactions
         </h2>
         {credits?.transactions && credits.transactions.length > 0 ? (
           <div className="space-y-2">

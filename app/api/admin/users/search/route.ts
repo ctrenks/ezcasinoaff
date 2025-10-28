@@ -46,6 +46,12 @@ export async function GET(req: NextRequest) {
         name: true,
         email: true,
         ezcasino: true,
+        userCredit: {
+          select: {
+            balance: true,
+            lifetime: true,
+          },
+        },
         radiumCredit: {
           select: {
             balance: true,
@@ -59,8 +65,10 @@ export async function GET(req: NextRequest) {
       user: user
         ? {
             ...user,
-            creditBalance: user.radiumCredit?.balance || 0,
-            lifetimeCredits: user.radiumCredit?.lifetime || 0,
+            userCreditBalance: user.userCredit?.balance || 0,
+            userLifetimeCredits: user.userCredit?.lifetime || 0,
+            radiumCreditBalance: user.radiumCredit?.balance || 0,
+            radiumLifetimeCredits: user.radiumCredit?.lifetime || 0,
           }
         : null,
     });

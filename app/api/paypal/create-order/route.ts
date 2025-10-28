@@ -51,7 +51,9 @@ export async function POST(req: NextRequest) {
           description:
             type === "subscription"
               ? `${planType} Subscription Plan`
-              : `${creditAmount} Radium Credits`,
+              : type === "radium"
+              ? `${creditAmount} Radium Credits (AI Reviews)`
+              : `${creditAmount} User Credits (EZ Credits)`,
           custom_id: JSON.stringify({
             userId: session.user.id,
             type,
@@ -72,6 +74,19 @@ export async function POST(req: NextRequest) {
 
     const order = await client().execute(request);
 
+    // Determine payment type
+    let paymentType: "SUBSCRIPTION" | "USER_CREDITS" | "RADIUM_CREDITS" =
+      "USER_CREDITS";
+    if (type === "subscription") {
+      paymentType = "SUBSCRIPTION";
+    } else if (type === "credits") {
+      // Default to USER_CREDITS (EZ Credits - payment currency)
+      paymentType = "USER_CREDITS";
+    } else if (type === "radium") {
+      // Radium Credits for AI reviews
+      paymentType = "RADIUM_CREDITS";
+    }
+
     // Store pending payment in database
     await prisma.payment.create({
       data: {
@@ -80,11 +95,11 @@ export async function POST(req: NextRequest) {
         amount: parseFloat(amount),
         currency: "USD",
         status: "PENDING",
-        type: type === "subscription" ? "SUBSCRIPTION" : "RADIUM_CREDITS",
+        type: paymentType,
         description:
           type === "subscription"
             ? `${planType} Subscription`
-            : `${creditAmount} Radium Credits`,
+            : `${creditAmount} ${paymentType === "USER_CREDITS" ? "User Credits (EZ Credits)" : "Radium Credits"}`,
         metadata: {
           paypalOrderId: order.result.id,
           planType,

@@ -45,7 +45,7 @@ User ID: ${session.user.id}
 ═══════════════════════════════════════
 PURCHASE DETAILS
 ═══════════════════════════════════════
-Type: ${purchaseType === "subscription" ? "Subscription" : "Credits"}
+Type: ${purchaseType === "subscription" ? "Subscription" : purchaseType === "radium" ? "Radium Credits (AI Reviews)" : "User Credits (EZ Credits - Payment Currency)"}
 Item: ${itemName}
 Amount: $${amount} USD
 ${creditAmount ? `Credits: ${creditAmount.toLocaleString()}` : ""}
