@@ -37,6 +37,7 @@ export default function AffiliateManagement() {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, searchQuery]);
 
   const fetchUsers = async () => {

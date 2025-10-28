@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
-import prisma from "@/lib/prisma";
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 
 // PUT /api/admin/referrals/commission-rate - Update a user's commission rate
 export async function PUT(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // Check if user is super admin (role 0)
     if (!session?.user?.id) {
@@ -70,7 +69,7 @@ export async function PUT(req: NextRequest) {
 // GET /api/admin/referrals/commission-rate - Get all users with their commission rates
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // Check if user is super admin (role 0)
     if (!session?.user?.id) {
