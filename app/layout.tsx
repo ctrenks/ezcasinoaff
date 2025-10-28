@@ -116,7 +116,13 @@ export default async function WebmasterLayout({
                         href="/profile/credits"
                         className="hover:text-purple-300 transition flex items-center gap-1"
                       >
-                        <span>💎</span> Credits
+                        <span>🤖</span> Radium Credits
+                      </Link>
+                      <Link
+                        href="/profile/ez-credits"
+                        className="hover:text-purple-300 transition flex items-center gap-1"
+                      >
+                        <span>💎</span> EZ Credits
                       </Link>
                       <Link
                         href="/profile"

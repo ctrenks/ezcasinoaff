@@ -48,7 +48,7 @@ export default function SiteSubscriptionModal({
   // Fetch user's credit balance
   useEffect(() => {
     if (session?.user && isOpen) {
-      fetch("/api/credits")
+      fetch("/api/ez-credits")
         .then((res) => res.json())
         .then((data) => setUserCredits(data.balance || 0))
         .catch(() => setUserCredits(0));

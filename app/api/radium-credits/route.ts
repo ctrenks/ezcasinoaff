@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/credits - Get user's Radium Credit balance (AI review credits)
+export const dynamic = "force-dynamic";
+
+// GET /api/radium-credits - Get user's Radium Credit balance and transactions
 export async function GET() {
   try {
     const session = await auth();
@@ -65,8 +67,9 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching Radium Credits:", error);
     return NextResponse.json(
-      { error: "Failed to fetch credits" },
+      { error: "Failed to fetch Radium Credits" },
       { status: 500 }
     );
   }
 }
+

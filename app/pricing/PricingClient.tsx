@@ -36,7 +36,7 @@ export default function PricingClient({
   // Fetch user's credit balance
   useEffect(() => {
     if (session?.user) {
-      fetch("/api/credits")
+      fetch("/api/ez-credits")
         .then((res) => res.json())
         .then((data) => setUserCredits(data.balance || 0))
         .catch(() => setUserCredits(0));

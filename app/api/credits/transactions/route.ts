@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/credits/transactions - Get User Credit transaction history (EZ Credits)
+// GET /api/credits/transactions - Get Radium Credit transaction history
 export async function GET(request: Request) {
   try {
     const session = await auth();
@@ -25,15 +25,23 @@ export async function GET(request: Request) {
     }
 
     const [transactions, total] = await Promise.all([
-      prisma.userCreditTransaction.findMany({
+      prisma.radiumTransaction.findMany({
         where,
         orderBy: {
           createdAt: "desc",
         },
         take: limit,
         skip: offset,
+        include: {
+          site: {
+            select: {
+              name: true,
+              domain: true,
+            },
+          },
+        },
       }),
-      prisma.userCreditTransaction.count({ where }),
+      prisma.radiumTransaction.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -43,7 +51,7 @@ export async function GET(request: Request) {
       offset,
     });
   } catch (error) {
-    console.error("Error fetching User Credit transactions:", error);
+    console.error("Error fetching Radium Credit transactions:", error);
     return NextResponse.json(
       { error: "Failed to fetch transactions" },
       { status: 500 }

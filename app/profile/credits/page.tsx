@@ -15,17 +15,18 @@ export default async function CreditsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          💎 EZ Credits (Payment Currency)
+          🤖 Radium Credits (AI Review Generation)
         </h1>
         <p className="text-gray-600 mb-4">
-          Purchase and manage your EZ Credits for subscriptions and services.
-          1 Credit = $1 USD
+          Use Radium Credits to generate AI-powered casino and game reviews.
+          Each credit generates one comprehensive review (~$3-4 value).
         </p>
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-          <p className="text-sm text-purple-900">
-            💡 <strong>How it works:</strong> Purchase EZ Credits to pay for
-            subscriptions, services, and more. Use them just like cash at 1:1
-            value. Credits can be purchased via PayPal or cryptocurrency.
+        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+          <p className="text-sm text-indigo-900">
+            💡 <strong>How it works:</strong> Radium Credits power AI-generated
+            content for SEO-optimized casino/game reviews with titles,
+            descriptions, Pro/Con sections, and FAQs. Purchase via PayPal or
+            cryptocurrency.
           </p>
         </div>
       </div>

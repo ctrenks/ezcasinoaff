@@ -64,7 +64,7 @@ export default function CreditsDisplay() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          purchaseType: "user_credits", // User Credits (EZ Credits - payment currency)
+          purchaseType: "radium", // Radium Credits (AI review generation)
           itemName: selectedPack.name,
           amount: selectedPack.price,
           creditAmount: selectedPack.totalCredits,
@@ -145,34 +145,34 @@ export default function CreditsDisplay() {
   return (
     <div className="space-y-6">
       {/* Balance Card */}
-      <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg shadow-xl p-8 text-white">
+      <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg shadow-xl p-8 text-white">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-purple-200 text-sm font-medium mb-1">
-              EZ Credits (Payment Currency)
+            <p className="text-indigo-200 text-sm font-medium mb-1">
+              Radium Credits (AI Reviews)
             </p>
             <p className="text-5xl font-bold">
               {credits?.balance.toLocaleString() || 0}
             </p>
-            <p className="text-purple-200 text-sm mt-2">
+            <p className="text-indigo-200 text-sm mt-2">
               Lifetime: {credits?.lifetime.toLocaleString() || 0} credits
             </p>
-            <p className="text-purple-100 text-xs mt-1">
-              💵 1 EZ Credit = $1 USD
+            <p className="text-indigo-100 text-xs mt-1">
+              🤖 ~$3-4 per credit · Generates AI reviews
             </p>
           </div>
-          <div className="text-6xl">💎</div>
+          <div className="text-6xl">🤖</div>
         </div>
       </div>
 
       {/* Purchase Packs */}
       <div className="bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Purchase EZ Credits
+          Purchase Radium Credits
         </h2>
         <p className="text-gray-600 text-sm mb-6">
-          Use EZ Credits to pay for subscriptions and other services. 1 Credit =
-          $1 USD
+          Generate professional AI-powered casino and game reviews. Each credit
+          generates one complete review.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {Object.values(CREDIT_PACKS).map((pack) => (
@@ -389,7 +389,7 @@ export default function CreditsDisplay() {
       {/* Recent Transactions */}
       <div className="bg-white rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Recent EZ Credits Transactions
+          Recent Radium Credit Transactions
         </h2>
         {credits?.transactions && credits.transactions.length > 0 ? (
           <div className="space-y-2">
