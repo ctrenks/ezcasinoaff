@@ -136,8 +136,19 @@ export default function SiteSubscriptionModal({
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!selectedPlan) {
+      setSubmitMessage({
+        type: "error",
+        text: "Please select a plan first.",
+      });
+      return;
+    }
+
     setSending(true);
     setSubmitMessage(null);
+
+    const planDetails = SUBSCRIPTION_PLANS[selectedPlan];
 
     try {
       const response = await fetch("/api/crypto-inquiry", {
@@ -145,8 +156,8 @@ export default function SiteSubscriptionModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           purchaseType: "subscription",
-          itemName: `${selectedPlan.name} Plan for ${site.name || site.domain}`,
-          amount: selectedPlan.annualPrice,
+          itemName: `${planDetails.name} Plan for ${site.name || site.domain}`,
+          amount: planDetails.annualPrice,
           preferredCrypto,
           message: `${message}\n\nSite ID: ${site.id}\nDomain: ${site.domain}`,
         }),
@@ -402,14 +413,15 @@ export default function SiteSubscriptionModal({
                 </h4>
                 <div className="text-sm text-purple-800 space-y-1">
                   <p>
-                    <strong>Plan:</strong> {selectedPlan.name}
+                    <strong>Plan:</strong>{" "}
+                    {SUBSCRIPTION_PLANS[selectedPlan].name}
                   </p>
                   <p>
                     <strong>Site:</strong> {site.name || site.domain}
                   </p>
                   <p>
-                    <strong>Amount:</strong> ${selectedPlan.annualPrice}{" "}
-                    USD/year
+                    <strong>Amount:</strong> $
+                    {SUBSCRIPTION_PLANS[selectedPlan].annualPrice} USD/year
                   </p>
                 </div>
               </div>
