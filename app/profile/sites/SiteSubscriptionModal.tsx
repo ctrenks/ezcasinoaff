@@ -32,7 +32,9 @@ export default function SiteSubscriptionModal({
 }: SiteSubscriptionModalProps) {
   const { data: session } = useSession();
   const [showCryptoModal, setShowCryptoModal] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = useState<
+    keyof typeof SUBSCRIPTION_PLANS | null
+  >(null);
   const [preferredCrypto, setPreferredCrypto] = useState("BTC");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -61,7 +63,9 @@ export default function SiteSubscriptionModal({
         site.subscription.plan as keyof typeof SUBSCRIPTION_PLANS
       ];
     }
-    return SUBSCRIPTION_PLANS[selectedPlan || "BASIC"];
+    const planKey = (selectedPlan ||
+      "BASIC") as keyof typeof SUBSCRIPTION_PLANS;
+    return SUBSCRIPTION_PLANS[planKey];
   };
 
   const currentPlanDetails = getCurrentPlanDetails();
