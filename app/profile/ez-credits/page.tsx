@@ -25,8 +25,8 @@ export default async function EZCreditsPage() {
           <p className="text-sm text-purple-900">
             💡 <strong>How to get EZ Credits:</strong> EZ Credits can only be
             purchased via cryptocurrency. Contact support@ezcasinoaff.com with
-            your preferred crypto and the amount you'd like to purchase. We'll
-            manually credit your account after payment confirmation.
+            your preferred crypto and the amount you&apos;d like to purchase.
+            We&apos;ll manually credit your account after payment confirmation.
           </p>
         </div>
       </div>
