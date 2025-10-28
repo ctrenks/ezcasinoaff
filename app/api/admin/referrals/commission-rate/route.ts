@@ -93,14 +93,27 @@ export async function GET(req: NextRequest) {
     const page = parseInt(url.searchParams.get("page") || "1");
     const pageSize = parseInt(url.searchParams.get("pageSize") || "50");
 
+    // Build where clause - only show users with ezcasino access
     const where = searchQuery
       ? {
-          OR: [
-            { email: { contains: searchQuery, mode: "insensitive" as const } },
-            { name: { contains: searchQuery, mode: "insensitive" as const } },
+          AND: [
+            { ezcasino: true },
+            {
+              OR: [
+                {
+                  email: {
+                    contains: searchQuery,
+                    mode: "insensitive" as const,
+                  },
+                },
+                {
+                  name: { contains: searchQuery, mode: "insensitive" as const },
+                },
+              ],
+            },
           ],
         }
-      : {};
+      : { ezcasino: true };
 
     const [users, totalCount] = await Promise.all([
       prisma.user.findMany({
@@ -112,6 +125,7 @@ export async function GET(req: NextRequest) {
           commissionRate: true,
           referralCode: true,
           createdAt: true,
+          ezcasino: true,
           _count: {
             select: {
               referrals: true,

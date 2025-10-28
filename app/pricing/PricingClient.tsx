@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import PayPalButton from "@/components/PayPalButton";
 
@@ -30,12 +30,70 @@ export default function PricingClient({
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [userCredits, setUserCredits] = useState<number | null>(null);
+  const [payingWithCredits, setPayingWithCredits] = useState(false);
+
+  // Fetch user's credit balance
+  useEffect(() => {
+    if (session?.user) {
+      fetch("/api/credits")
+        .then((res) => res.json())
+        .then((data) => setUserCredits(data.balance || 0))
+        .catch(() => setUserCredits(0));
+    }
+  }, [session]);
+
+  const requiredCredits = Math.ceil(amount);
+  const hasEnoughCredits =
+    userCredits !== null && userCredits >= requiredCredits;
 
   const handleCryptoClick = () => {
     setShowCryptoModal(true);
     setSubmitMessage(null);
     setMessage("");
     setPreferredCrypto("BTC");
+  };
+
+  const handlePayWithCredits = async () => {
+    if (!hasEnoughCredits || payingWithCredits) return;
+
+    const confirmed = confirm(
+      `Pay with ${requiredCredits} Radium Credits?\n\nThis will deduct ${requiredCredits} credits from your balance.`
+    );
+
+    if (!confirmed) return;
+
+    setPayingWithCredits(true);
+
+    try {
+      const response = await fetch("/api/credits/pay-with-credits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          amount,
+          planType,
+          creditAmount,
+        }),
+      });
+
+      if (response.ok) {
+        if (type === "subscription") {
+          window.location.href =
+            "/profile/sites?success=subscription_activated";
+        } else {
+          window.location.href = "/profile/credits?success=credits_added";
+        }
+      } else {
+        const data = await response.json();
+        alert(`Payment failed: ${data.error || "Unknown error"}`);
+        setPayingWithCredits(false);
+      }
+    } catch (error) {
+      console.error("Error paying with credits:", error);
+      alert("An error occurred. Please try again.");
+      setPayingWithCredits(false);
+    }
   };
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
@@ -106,6 +164,37 @@ export default function PricingClient({
             }
           }}
         />
+
+        {/* Pay with Credits Button */}
+        {hasEnoughCredits && (
+          <button
+            onClick={handlePayWithCredits}
+            disabled={payingWithCredits}
+            className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {payingWithCredits ? (
+              "Processing..."
+            ) : (
+              <>💎 Pay with {requiredCredits} Credits</>
+            )}
+          </button>
+        )}
+
+        {/* Show credit balance if logged in */}
+        {session?.user && userCredits !== null && (
+          <div className="text-center text-sm">
+            <span className="text-gray-600">
+              Your Balance: <strong>{userCredits.toLocaleString()}</strong>{" "}
+              credits
+            </span>
+            {!hasEnoughCredits && requiredCredits > 0 && (
+              <p className="text-red-600 text-xs mt-1">
+                Need {(requiredCredits - userCredits).toLocaleString()} more
+                credits
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Crypto Button */}
         <button

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { SUBSCRIPTION_PLANS } from "@/lib/pricing";
 import PayPalButton from "@/components/PayPalButton";
@@ -40,8 +40,34 @@ export default function SiteSubscriptionModal({
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [userCredits, setUserCredits] = useState<number | null>(null);
+  const [payingWithCredits, setPayingWithCredits] = useState(false);
+
+  // Fetch user's credit balance
+  useEffect(() => {
+    if (session?.user && isOpen) {
+      fetch("/api/credits")
+        .then((res) => res.json())
+        .then((data) => setUserCredits(data.balance || 0))
+        .catch(() => setUserCredits(0));
+    }
+  }, [session, isOpen]);
 
   if (!isOpen) return null;
+
+  const getCurrentPlanDetails = () => {
+    if (site.subscription) {
+      return SUBSCRIPTION_PLANS[
+        site.subscription.plan as keyof typeof SUBSCRIPTION_PLANS
+      ];
+    }
+    return SUBSCRIPTION_PLANS[selectedPlan || "BASIC"];
+  };
+
+  const currentPlanDetails = getCurrentPlanDetails();
+  const requiredCredits = Math.ceil(currentPlanDetails.annualPrice);
+  const hasEnoughCredits =
+    userCredits !== null && userCredits >= requiredCredits;
 
   const handleCryptoClick = (plan: any) => {
     setSelectedPlan(plan);
@@ -49,6 +75,59 @@ export default function SiteSubscriptionModal({
     setSubmitMessage(null);
     setMessage("");
     setPreferredCrypto("BTC");
+  };
+
+  const handlePayWithCredits = async (plan: any) => {
+    if (payingWithCredits) return;
+
+    const planRequiredCredits = Math.ceil(plan.annualPrice);
+    if (userCredits === null || userCredits < planRequiredCredits) {
+      alert(
+        `Insufficient credits. You need ${planRequiredCredits} credits but have ${
+          userCredits || 0
+        }.`
+      );
+      return;
+    }
+
+    const confirmed = confirm(
+      `Pay with ${planRequiredCredits} Radium Credits?\n\nPlan: ${
+        plan.name
+      }\nSite: ${
+        site.name || site.domain
+      }\n\nThis will deduct ${planRequiredCredits} credits from your balance.`
+    );
+
+    if (!confirmed) return;
+
+    setPayingWithCredits(true);
+
+    try {
+      const response = await fetch("/api/credits/pay-with-credits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "subscription",
+          amount: plan.annualPrice,
+          planType: plan.id,
+          siteId: site.id,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Subscription activated successfully!");
+        onClose();
+        window.location.reload(); // Refresh to show new subscription
+      } else {
+        const data = await response.json();
+        alert(`Payment failed: ${data.error || "Unknown error"}`);
+        setPayingWithCredits(false);
+      }
+    } catch (error) {
+      console.error("Error paying with credits:", error);
+      alert("An error occurred. Please try again.");
+      setPayingWithCredits(false);
+    }
   };
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
@@ -152,9 +231,7 @@ export default function SiteSubscriptionModal({
                   {site.subscription.endDate && (
                     <p className="text-xs text-green-600 mt-1">
                       Renews on:{" "}
-                      {new Date(
-                        site.subscription.endDate
-                      ).toLocaleDateString()}
+                      {new Date(site.subscription.endDate).toLocaleDateString()}
                     </p>
                   )}
                 </div>
@@ -251,12 +328,45 @@ export default function SiteSubscriptionModal({
                           onClose();
                         }}
                       />
+                      {userCredits !== null &&
+                        userCredits >= Math.ceil(plan.annualPrice) && (
+                          <button
+                            onClick={() => handlePayWithCredits(plan)}
+                            disabled={payingWithCredits}
+                            className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {payingWithCredits ? (
+                              "Processing..."
+                            ) : (
+                              <>
+                                💎 Pay with {Math.ceil(plan.annualPrice)}{" "}
+                                Credits
+                              </>
+                            )}
+                          </button>
+                        )}
                       <button
                         onClick={() => handleCryptoClick(plan)}
                         className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition border border-gray-300"
                       >
                         💰 Pay with Crypto
                       </button>
+                      {userCredits !== null && (
+                        <p className="text-xs text-center text-gray-600 mt-2">
+                          Balance:{" "}
+                          <strong>{userCredits.toLocaleString()}</strong>{" "}
+                          credits
+                          {userCredits < Math.ceil(plan.annualPrice) && (
+                            <span className="text-red-600 block">
+                              Need{" "}
+                              {(
+                                Math.ceil(plan.annualPrice) - userCredits
+                              ).toLocaleString()}{" "}
+                              more
+                            </span>
+                          )}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -294,7 +404,8 @@ export default function SiteSubscriptionModal({
                     <strong>Site:</strong> {site.name || site.domain}
                   </p>
                   <p>
-                    <strong>Amount:</strong> ${selectedPlan.annualPrice} USD/year
+                    <strong>Amount:</strong> ${selectedPlan.annualPrice}{" "}
+                    USD/year
                   </p>
                 </div>
               </div>
@@ -408,4 +519,3 @@ export default function SiteSubscriptionModal({
     </>
   );
 }
-

@@ -34,12 +34,18 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const user = await prisma.user.findFirst({
+      where: {
+        AND: [
+          { email },
+          { ezcasino: true }, // Only show users with ezcasino access
+        ],
+      },
       select: {
         id: true,
         name: true,
         email: true,
+        ezcasino: true,
         radiumCredit: {
           select: {
             balance: true,
