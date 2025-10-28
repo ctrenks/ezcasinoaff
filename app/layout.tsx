@@ -93,12 +93,20 @@ export default async function WebmasterLayout({
                     <>
                       <NotificationBell />
                       {session.user.role === 0 && (
-                        <Link
-                          href="/admin/affiliates"
-                          className="hover:text-orange-300 transition flex items-center gap-1 text-orange-400"
-                        >
-                          <span>⚙️</span> Manage Affiliates
-                        </Link>
+                        <>
+                          <Link
+                            href="/admin/affiliates"
+                            className="hover:text-orange-300 transition flex items-center gap-1 text-orange-400"
+                          >
+                            <span>⚙️</span> Manage Affiliates
+                          </Link>
+                          <Link
+                            href="/admin/credits"
+                            className="hover:text-orange-300 transition flex items-center gap-1 text-orange-400"
+                          >
+                            <span>💳</span> Manage Credits
+                          </Link>
+                        </>
                       )}
                       <Link
                         href="/profile/affiliates"

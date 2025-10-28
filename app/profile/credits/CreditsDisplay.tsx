@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CREDIT_PACKS } from "@/lib/pricing";
+import PayPalButton from "@/components/PayPalButton";
 
 interface CreditData {
   balance: number;
@@ -23,6 +24,8 @@ interface CreditData {
 export default function CreditsDisplay() {
   const [credits, setCredits] = useState<CreditData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showCryptoModal, setShowCryptoModal] = useState(false);
+  const [selectedPack, setSelectedPack] = useState<any>(null);
 
   useEffect(() => {
     fetchCredits();
@@ -139,20 +142,83 @@ export default function CreditsDisplay() {
                   </p>
                 )}
               </div>
-              <button
-                disabled
-                className="w-full py-2 bg-gray-300 text-gray-500 rounded-lg font-semibold cursor-not-allowed"
-              >
-                Coming Soon
-              </button>
+              <div className="space-y-2">
+                <PayPalButton
+                  type="credits"
+                  amount={pack.price}
+                  creditAmount={pack.totalCredits}
+                  onSuccess={() => {
+                    fetchCredits();
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    setSelectedPack(pack);
+                    setShowCryptoModal(true);
+                  }}
+                  className="w-full py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition border border-gray-300"
+                >
+                  💰 Pay with Crypto
+                </button>
+              </div>
             </div>
           ))}
         </div>
-        <p className="text-sm text-gray-500 mt-4 text-center">
-          Stripe integration coming soon. You&apos;ll be able to purchase
-          credits with credit card.
-        </p>
       </div>
+
+      {/* Crypto Payment Modal */}
+      {showCryptoModal && selectedPack && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">Cryptocurrency Payment</h3>
+            <p className="text-gray-600 mb-4">
+              To purchase{" "}
+              <strong>{selectedPack.totalCredits.toLocaleString()}</strong>{" "}
+              credits for <strong>${selectedPack.price}</strong> using
+              cryptocurrency:
+            </p>
+            <ol className="list-decimal list-inside space-y-2 mb-6 text-sm text-gray-700">
+              <li>
+                Contact us at{" "}
+                <strong className="text-purple-600">
+                  admin@yourdomain.com
+                </strong>
+              </li>
+              <li>
+                Specify: &quot;{selectedPack.name} -{" "}
+                {selectedPack.totalCredits.toLocaleString()} credits&quot;
+              </li>
+              <li>We&apos;ll provide wallet addresses for BTC, ETH, or USDT</li>
+              <li>Send payment to the provided address</li>
+              <li>Reply with your transaction hash</li>
+              <li>Credits will be added within 1 hour of confirmation</li>
+            </ol>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p className="text-sm text-blue-800">
+                <strong>💡 Quick Tip:</strong> Include your account email in
+                your message for faster processing!
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <a
+                href={`mailto:admin@yourdomain.com?subject=Crypto Payment: ${selectedPack.name} - ${selectedPack.totalCredits} Credits&body=Hi, I'd like to purchase ${selectedPack.totalCredits} credits (${selectedPack.name}) for $${selectedPack.price} using cryptocurrency.%0D%0A%0D%0AMy account email: [Your Email]%0D%0APreferred crypto: [BTC/ETH/USDT]%0D%0A%0D%0AThank you!`}
+                className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-center font-semibold"
+              >
+                📧 Email Us
+              </a>
+              <button
+                onClick={() => {
+                  setShowCryptoModal(false);
+                  setSelectedPack(null);
+                }}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Recent Transactions */}
       <div className="bg-white rounded-lg shadow-md p-8">

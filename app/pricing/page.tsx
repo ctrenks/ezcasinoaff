@@ -1,6 +1,7 @@
 import { SUBSCRIPTION_PLANS, CREDIT_PACKS } from "@/lib/pricing";
 import Link from "next/link";
 import { auth } from "@/auth";
+import PricingClient from "./PricingClient";
 
 export const dynamic = "force-dynamic";
 
@@ -96,16 +97,12 @@ export default async function PricingPage() {
                   ))}
                 </ul>
                 {session?.user ? (
-                  <Link
-                    href="/profile/sites/add"
-                    className={`block w-full text-center px-6 py-3 rounded-lg font-semibold transition ${
-                      "popular" in plan && plan.popular
-                        ? "bg-purple-600 hover:bg-purple-700 text-white"
-                        : "bg-gray-900 hover:bg-gray-800 text-white"
-                    }`}
-                  >
-                    Add Site & Subscribe
-                  </Link>
+                  <PricingClient
+                    type="subscription"
+                    amount={plan.annualPrice}
+                    planType={plan.id}
+                    planName={plan.name}
+                  />
                 ) : (
                   <Link
                     href="/auth/signin"
@@ -180,16 +177,12 @@ export default async function PricingPage() {
                 </div>
               </div>
               {session?.user ? (
-                <Link
-                  href="/profile/credits"
-                  className={`block w-full text-center px-4 py-2 rounded-lg font-semibold transition ${
-                    "popular" in pack && pack.popular
-                      ? "bg-purple-600 hover:bg-purple-700 text-white"
-                      : "bg-gray-900 hover:bg-gray-800 text-white"
-                  }`}
-                >
-                  Purchase
-                </Link>
+                <PricingClient
+                  type="credits"
+                  amount={pack.price}
+                  creditAmount={pack.totalCredits}
+                  packName={pack.name}
+                />
               ) : (
                 <Link
                   href="/auth/signin"
