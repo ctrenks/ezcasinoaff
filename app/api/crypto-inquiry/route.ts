@@ -80,7 +80,7 @@ User's direct reply-to email: ${session.user.email}
     const { data, error } = await resend.emails.send({
       from: "EZ Casino Affiliates <noreply@ezcasinoaff.com>",
       to: "support@ezcasinoaff.com",
-      replyTo: session.user.email || undefined,
+      reply_to: session.user.email || undefined,
       subject: `Crypto Payment: ${itemName} - $${amount} (${session.user.email})`,
       text: emailContent,
     });
