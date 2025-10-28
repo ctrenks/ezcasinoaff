@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import ManualCreditAdjustment from "./ManualCreditAdjustment";
+import ManualRadiumCreditAdjustment from "./ManualRadiumCreditAdjustment";
 
-export default async function AdminCreditsPage() {
+export default async function AdminRadiumCreditsPage() {
   const session = await auth();
 
   if (!session?.user) {
@@ -18,15 +18,15 @@ export default async function AdminCreditsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">
-          💎 EZ Credit Management
+          🤖 Radium Credit Management
         </h1>
         <p className="mt-2 text-gray-600">
-          Manually adjust user EZ Credits (payment currency) for crypto payments
-          and other custom transactions. 1 EZ Credit = $1 USD
+          Manually adjust user Radium Credits (AI review generation) for special
+          circumstances and promotions. ~$3-4 per credit
         </p>
       </div>
 
-      <ManualCreditAdjustment />
+      <ManualRadiumCreditAdjustment />
     </div>
   );
 }

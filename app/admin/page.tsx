@@ -148,11 +148,18 @@ export default async function AdminDashboard() {
       color: "bg-orange-100 text-orange-700 border-orange-300",
     },
     {
-      title: "Manage Credits",
-      description: "Manually adjust user Radium credit balances",
+      title: "Manage EZ Credits",
+      description: "Manually adjust user EZ Credits (payment currency)",
       href: "/admin/credits",
-      icon: "💳",
-      color: "bg-blue-100 text-blue-700 border-blue-300",
+      icon: "💎",
+      color: "bg-purple-100 text-purple-700 border-purple-300",
+    },
+    {
+      title: "Manage Radium Credits",
+      description: "Manually adjust user Radium Credits (AI reviews)",
+      href: "/admin/radium-credits",
+      icon: "🤖",
+      color: "bg-indigo-100 text-indigo-700 border-indigo-300",
     },
     {
       title: "Send Notifications",

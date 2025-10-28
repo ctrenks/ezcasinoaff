@@ -119,7 +119,7 @@ export default function ManualCreditAdjustment() {
           type: "success",
           text: `Successfully ${
             adjustmentType === "add" ? "added" : "removed"
-          } ${Math.abs(finalAmount)} credits. New balance: ${
+          } ${Math.abs(finalAmount)} EZ Credits. New balance: ${
             data.credit.balance
           }`,
         });
@@ -151,7 +151,7 @@ export default function ManualCreditAdjustment() {
     <div className="space-y-6">
       {/* Adjustment Form */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Adjust User Credits</h2>
+        <h2 className="text-xl font-semibold mb-4">Adjust User EZ Credits</h2>
 
         {/* Search User */}
         <form onSubmit={handleSearchUser} className="mb-6">
@@ -249,7 +249,7 @@ export default function ManualCreditAdjustment() {
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
                 >
                   <PlusIcon className="h-5 w-5" />
-                  {saving ? "Processing..." : "Add Credits"}
+                  {saving ? "Processing..." : "Add EZ Credits"}
                 </button>
 
                 <button
@@ -258,7 +258,7 @@ export default function ManualCreditAdjustment() {
                   className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50"
                 >
                   <MinusIcon className="h-5 w-5" />
-                  {saving ? "Processing..." : "Remove Credits"}
+                  {saving ? "Processing..." : "Remove EZ Credits"}
                 </button>
               </div>
             </div>

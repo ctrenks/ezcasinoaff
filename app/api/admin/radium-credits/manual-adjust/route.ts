@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 
-// POST /api/admin/credits/manual-adjust - Manually adjust user credits (for crypto payments, etc.)
+// POST /api/admin/radium-credits/manual-adjust - Manually adjust user Radium credits (super admin only)
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
@@ -42,13 +42,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get or create user's EZ Credit account
-    let credit = await prisma.userCredit.findUnique({
+    // Get or create user's Radium Credit account
+    let credit = await prisma.radiumCredit.findUnique({
       where: { userId },
     });
 
     if (!credit) {
-      credit = await prisma.userCredit.create({
+      credit = await prisma.radiumCredit.create({
         data: {
           userId,
           balance: 0,
@@ -62,13 +62,13 @@ export async function POST(req: NextRequest) {
 
     if (newBalance < 0) {
       return NextResponse.json(
-        { error: "Insufficient EZ Credits for this adjustment" },
+        { error: "Insufficient Radium Credits for this adjustment" },
         { status: 400 }
       );
     }
 
-    // Update EZ credit balance
-    const updatedCredit = await prisma.userCredit.update({
+    // Update Radium credit balance
+    const updatedCredit = await prisma.radiumCredit.update({
       where: { userId },
       data: {
         balance: newBalance,
@@ -77,36 +77,34 @@ export async function POST(req: NextRequest) {
     });
 
     // Create transaction record
-    await prisma.userCreditTransaction.create({
+    await prisma.radiumTransaction.create({
       data: {
         userId,
         creditId: credit.id,
         type: "ADMIN_ADJUST",
         amount,
         balance: updatedCredit.balance,
-        cost: amount > 0 ? amount : undefined,
-        currency: "USD",
         description: `${description}${
           paymentMethod ? ` (${paymentMethod})` : ""
         }`,
       },
     });
 
-    // Create payment record if adding EZ credits
+    // Create payment record if adding Radium credits
     if (amount > 0) {
       await prisma.payment.create({
         data: {
           userId,
-          amount: amount, // EZ Credits = dollars
+          amount: amount * 3.5, // Approximate dollar value (~$3-4 per credit)
           currency: "USD",
           status: "SUCCEEDED",
-          type: "USER_CREDITS",
+          type: "RADIUM_CREDITS",
           paidAt: new Date(),
-          description: `Manual EZ Credit adjustment: ${description}`,
+          description: `Manual Radium Credit adjustment: ${description}`,
           metadata: {
             adjustedBy: session.user.id,
             adjustedByEmail: session.user.email,
-            paymentMethod: paymentMethod || "crypto",
+            paymentMethod: paymentMethod || "manual",
             creditAmount: amount,
           },
         },
@@ -117,12 +115,12 @@ export async function POST(req: NextRequest) {
     await createNotification({
       userId,
       type: "SYSTEM",
-      title: amount > 0 ? "EZ Credits Added" : "EZ Credits Adjusted",
+      title: amount > 0 ? "Radium Credits Added" : "Radium Credits Adjusted",
       message: `${
         amount > 0 ? "+" : ""
-      }${amount} EZ Credits (payment currency): ${description}`,
-      link: "/profile/ez-credits",
-      icon: amount > 0 ? "💎" : "⚙️",
+      }${amount} Radium Credits (AI reviews): ${description}`,
+      link: "/profile/credits",
+      icon: amount > 0 ? "🤖" : "⚙️",
     });
 
     return NextResponse.json({
@@ -134,7 +132,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error adjusting credits:", error);
+    console.error("Error adjusting Radium credits:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -142,7 +140,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/admin/credits/manual-adjust - Get recent manual adjustments
+// GET /api/admin/radium-credits/manual-adjust - Get recent Radium Credit manual adjustments
 export async function GET(req: NextRequest) {
   try {
     const session = await auth();
@@ -164,7 +162,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const transactions = await prisma.userCreditTransaction.findMany({
+    const transactions = await prisma.radiumTransaction.findMany({
       where: {
         type: "ADMIN_ADJUST",
       },
@@ -193,7 +191,7 @@ export async function GET(req: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error("Error fetching manual adjustments:", error);
+    console.error("Error fetching Radium Credit manual adjustments:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

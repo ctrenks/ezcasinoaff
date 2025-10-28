@@ -150,20 +150,23 @@ model RadiumCredit {
 
 ## Admin Management
 
-### Managing EZ Credits
+### Managing EZ Credits 💎
 
-- Page: `/admin/credits`
+- **Page:** `/admin/credits`
 - Search user by email
-- Manually add/remove credits
+- Manually add/remove EZ Credits
 - Add description for audit trail
-- User gets notification
+- User gets notification at `/profile/ez-credits`
+- Used for: Crypto payments, special promotions
 
-### Managing Radium Credits
+### Managing Radium Credits 🤖
 
-- Same page: `/admin/credits` (currently set for Radium)
-- Can be extended to manage both types
-- Track AI review usage
-- Monitor for abuse
+- **Page:** `/admin/radium-credits` (NEW)
+- Search user by email
+- Manually add/remove Radium Credits
+- Add description for audit trail
+- User gets notification at `/profile/credits`
+- Used for: Promotional bonuses, refunds, compensation
 
 ---
 
