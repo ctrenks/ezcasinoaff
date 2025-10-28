@@ -19,10 +19,13 @@ export async function GET() {
       include: {
         subscription: {
           select: {
+            id: true,
             plan: true,
             status: true,
             startDate: true,
             endDate: true,
+            amount: true,
+            monthlyRate: true,
           },
         },
         _count: {
