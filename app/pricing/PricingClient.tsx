@@ -82,7 +82,7 @@ export default function PricingClient({
               <li>
                 Contact us at{" "}
                 <strong className="text-purple-600">
-                  admin@yourdomain.com
+                  support@ezcasinoaff.com
                 </strong>
               </li>
               <li>
@@ -106,7 +106,7 @@ export default function PricingClient({
             </div>
             <div className="flex gap-3">
               <a
-                href={`mailto:admin@yourdomain.com?subject=Crypto Payment: ${
+                href={`mailto:support@ezcasinoaff.com?subject=Crypto Payment: ${
                   type === "subscription" ? planName : packName
                 } - $${amount}&body=Hi, I'd like to purchase ${
                   type === "subscription"

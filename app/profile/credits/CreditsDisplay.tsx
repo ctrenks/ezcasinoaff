@@ -181,7 +181,7 @@ export default function CreditsDisplay() {
               <li>
                 Contact us at{" "}
                 <strong className="text-purple-600">
-                  admin@yourdomain.com
+                  support@ezcasinoaff.com
                 </strong>
               </li>
               <li>
@@ -201,7 +201,7 @@ export default function CreditsDisplay() {
             </div>
             <div className="flex gap-3">
               <a
-                href={`mailto:admin@yourdomain.com?subject=Crypto Payment: ${selectedPack.name} - ${selectedPack.totalCredits} Credits&body=Hi, I'd like to purchase ${selectedPack.totalCredits} credits (${selectedPack.name}) for $${selectedPack.price} using cryptocurrency.%0D%0A%0D%0AMy account email: [Your Email]%0D%0APreferred crypto: [BTC/ETH/USDT]%0D%0A%0D%0AThank you!`}
+                href={`mailto:support@ezcasinoaff.com?subject=Crypto Payment: ${selectedPack.name} - ${selectedPack.totalCredits} Credits&body=Hi, I'd like to purchase ${selectedPack.totalCredits} credits (${selectedPack.name}) for $${selectedPack.price} using cryptocurrency.%0D%0A%0D%0AMy account email: [Your Email]%0D%0APreferred crypto: [BTC/ETH/USDT]%0D%0A%0D%0AThank you!`}
                 className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-center font-semibold"
               >
                 📧 Email Us
