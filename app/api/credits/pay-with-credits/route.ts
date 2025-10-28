@@ -181,11 +181,12 @@ export async function POST(req: NextRequest) {
         });
 
         if (user?.referredById) {
-          await createAffiliateCommission({
-            referredUserId: session.user.id,
-            paymentId: payment.id,
-            subscriptionId: subscription.id,
-          });
+          await createAffiliateCommission(
+            payment.id,
+            session.user.id,
+            amount,
+            subscription.id
+          );
         }
 
         // Send notification
@@ -279,10 +280,7 @@ export async function POST(req: NextRequest) {
         });
 
         if (user?.referredById) {
-          await createAffiliateCommission({
-            referredUserId: session.user.id,
-            paymentId: payment.id,
-          });
+          await createAffiliateCommission(payment.id, session.user.id, amount);
         }
 
         // Send notification
