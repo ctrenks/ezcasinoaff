@@ -1,11 +1,25 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function SignInForm() {
+export default function SignInForm({
+  referralCode,
+}: {
+  referralCode?: string;
+}) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Store referral code in cookie if present
+  useEffect(() => {
+    if (referralCode) {
+      // Store in cookie for 7 days
+      document.cookie = `ref=${referralCode}; path=/; max-age=${
+        60 * 60 * 24 * 7
+      }`;
+    }
+  }, [referralCode]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

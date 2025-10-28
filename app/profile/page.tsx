@@ -32,9 +32,54 @@ export default async function WebmasterProfile() {
     },
   });
 
+  // Fetch user's affiliate info
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      referralCode: true,
+      commissionRate: true,
+      _count: {
+        select: {
+          referrals: true,
+        },
+      },
+    },
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">My Profile</h1>
+
+      {/* Affiliate Program Section */}
+      <div className="mb-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg shadow-md p-6 text-white">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <h2 className="text-xl font-bold mb-2">💰 Affiliate Program</h2>
+            <p className="text-sm opacity-90 mb-4">
+              You&apos;re on a <strong>{user?.commissionRate || 15}%</strong>{" "}
+              revshare deal
+            </p>
+            <div className="flex items-center gap-4 text-sm">
+              <div>
+                <span className="opacity-75">Total Referrals:</span>{" "}
+                <strong>{user?._count.referrals || 0}</strong>
+              </div>
+              {user?.referralCode && (
+                <div className="bg-white/20 px-3 py-1 rounded">
+                  <span className="opacity-75">Code:</span>{" "}
+                  <strong>{user.referralCode}</strong>
+                </div>
+              )}
+            </div>
+          </div>
+          <Link
+            href="/profile/affiliates"
+            className="px-6 py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-gray-100 transition"
+          >
+            View Dashboard →
+          </Link>
+        </div>
+      </div>
 
       {/* Sites Overview Section */}
       <div className="mb-8 bg-white rounded-lg shadow-md p-6">

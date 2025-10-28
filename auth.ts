@@ -46,7 +46,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           // Try to find existing user
           const existingUser = await prisma.user.findUnique({
             where: { id: user.id },
-            select: { role: true, apiKey: true, ezcasino: true, allmedia: true },
+            select: {
+              role: true,
+              apiKey: true,
+              ezcasino: true,
+              allmedia: true,
+              referredById: true,
+              createdAt: true,
+            },
           });
 
           // If user exists, update their fields if needed
@@ -55,6 +62,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               role?: number;
               apiKey?: string;
               ezcasino?: boolean;
+              referredById?: string;
             } = {};
 
             if (!existingUser.role) {
@@ -70,6 +78,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               updates.ezcasino = true;
             }
 
+            // Check if this is a newly created user (created within the last minute)
+            // and they don't have a referrer yet
+            const isNewUser =
+              existingUser.createdAt &&
+              Date.now() - existingUser.createdAt.getTime() < 60000; // 1 minute
+
+            if (isNewUser && !existingUser.referredById) {
+              // Check for referral cookie (would be set from signin page)
+              // Note: In a real scenario, you'd get the cookie from the request
+              // For now, we'll handle this in a separate API endpoint after signin
+            }
+
             // Note: allmedia flag would be set when they log into allmediamatter.com
 
             // Only update if there are changes
@@ -83,7 +103,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         } catch (error) {
           // Silently handle errors for new users during first sign-in
           // The PrismaAdapter will create the user with default values
-          console.log("Sign-in callback: User not yet created, will be created by adapter");
+          console.log(
+            "Sign-in callback: User not yet created, will be created by adapter"
+          );
         }
       }
       return true;

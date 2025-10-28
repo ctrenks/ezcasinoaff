@@ -25,6 +25,11 @@ model User {
   ezcasino      Boolean         @default(true)  // Access to EZ Casino Affiliates
   allmedia      Boolean         @default(false) // Access to All Media Matter
 
+  // Affiliate/Referral Program
+  referralCode  String?         @unique         // Unique code for referral links
+  referredById  String?                         // User who referred this user
+  commissionRate Decimal        @default(15)    @db.Decimal(5, 2) // Commission percentage (default 15%)
+
   accounts      Account[]
   Authenticator Authenticator[]
   bids          Bid[]
@@ -48,6 +53,15 @@ model User {
 
   // Notification relations
   notifications      Notification[]
+
+  // Affiliate/Referral relations
+  referredBy           User?                 @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals            User[]                @relation("UserReferrals")
+  commissionsEarned    AffiliateCommission[] @relation("ReferrerCommissions")
+  commissionsGenerated AffiliateCommission[] @relation("ReferredUserCommissions")
+
+  @@index([referralCode])
+  @@index([referredById])
 }
 
 model Account {
@@ -194,6 +208,7 @@ model Subscription {
   site                  Site?
   user                  User                @relation(fields: [userId], references: [id])
   payments              Payment[]
+  affiliateCommissions  AffiliateCommission[]
 
   @@index([userId])
   @@index([status])
@@ -240,6 +255,7 @@ model Payment {
   // Relations
   subscription          Subscription?   @relation(fields: [subscriptionId], references: [id])
   user                  User            @relation(fields: [userId], references: [id])
+  affiliateCommissions  AffiliateCommission[]
 
   @@index([userId])
   @@index([subscriptionId])
@@ -1289,6 +1305,7 @@ enum NotificationType {
   NEW_GAME           // New game added to database
   SYSTEM             // System announcements
   SUBSCRIPTION       // Subscription updates
+  AFFILIATE_EARNING  // New affiliate commission earned
 }
 
 model Notification {
@@ -1311,4 +1328,54 @@ model Notification {
   @@index([isRead])
   @@index([createdAt])
   @@index([userId, isRead])
+}
+
+// ===================================
+// Affiliate Program System
+// ===================================
+
+enum CommissionStatus {
+  PENDING    // Commission calculated but not yet paid
+  PAID       // Commission has been paid out
+  CANCELLED  // Commission cancelled (refund, fraud, etc.)
+}
+
+model AffiliateCommission {
+  id              String          @id @default(cuid())
+  referrerId      String          // User who will receive the commission
+  referredUserId  String          // User who made the payment
+  paymentId       String          // The payment that generated this commission
+  subscriptionId  String?         // Optional: link to subscription
+
+  // Commission details
+  amount          Decimal         @db.Decimal(10, 2) // Commission amount in currency
+  percentage      Decimal         @db.Decimal(5, 2)  // Percentage used for calculation
+  currency        String          @default("USD")
+
+  // Payment information
+  paymentAmount   Decimal         @db.Decimal(10, 2) // Original payment amount
+
+  // Status tracking
+  status          CommissionStatus @default(PENDING)
+  paidAt          DateTime?       // When commission was paid
+  cancelledAt     DateTime?       // When commission was cancelled
+  cancellationReason String?      // Reason for cancellation
+
+  // Metadata
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  referrer        User            @relation("ReferrerCommissions", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredUser    User            @relation("ReferredUserCommissions", fields: [referredUserId], references: [id], onDelete: Cascade)
+  payment         Payment         @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  subscription    Subscription?   @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@index([referrerId])
+  @@index([referredUserId])
+  @@index([paymentId])
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([referrerId, status])
 }
