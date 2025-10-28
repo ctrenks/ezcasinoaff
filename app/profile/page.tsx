@@ -56,8 +56,9 @@ export default async function WebmasterProfile() {
           <div className="flex-1">
             <h2 className="text-xl font-bold mb-2">💰 Affiliate Program</h2>
             <p className="text-sm opacity-90 mb-4">
-              You&apos;re on a <strong>{user?.commissionRate || 15}%</strong>{" "}
-              revshare deal
+              You&apos;re on a{" "}
+              <strong>{Number(user?.commissionRate || 15)}%</strong> revshare
+              deal
             </p>
             <div className="flex items-center gap-4 text-sm">
               <div>
