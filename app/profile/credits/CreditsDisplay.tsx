@@ -25,12 +25,14 @@ interface CreditData {
 export default function CreditsDisplay() {
   const { data: session } = useSession();
   const [credits, setCredits] = useState<CreditData | null>(null);
+  const [ezCredits, setEzCredits] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [showCryptoModal, setShowCryptoModal] = useState(false);
   const [selectedPack, setSelectedPack] = useState<any>(null);
   const [preferredCrypto, setPreferredCrypto] = useState("BTC");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [payingWithCredits, setPayingWithCredits] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -38,7 +40,10 @@ export default function CreditsDisplay() {
 
   useEffect(() => {
     fetchCredits();
-  }, []);
+    if (session?.user) {
+      fetchEzCredits();
+    }
+  }, [session]);
 
   const fetchCredits = async () => {
     try {
@@ -51,6 +56,70 @@ export default function CreditsDisplay() {
       console.error("Failed to fetch credits:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchEzCredits = async () => {
+    try {
+      const response = await fetch("/api/ez-credits");
+      if (response.ok) {
+        const data = await response.json();
+        setEzCredits(data.balance || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch EZ credits:", error);
+      setEzCredits(0);
+    }
+  };
+
+  const handlePayWithEzCredits = async (pack: any) => {
+    const requiredEzCredits = Math.ceil(pack.price); // 1 EZ Credit = $1
+
+    if (!ezCredits || ezCredits < requiredEzCredits) {
+      setSubmitMessage({
+        type: "error",
+        text: `Insufficient EZ Credits. Need ${requiredEzCredits}, have ${
+          ezCredits || 0
+        }`,
+      });
+      return;
+    }
+
+    setPayingWithCredits(true);
+    setSubmitMessage(null);
+
+    try {
+      const response = await fetch("/api/credits/buy-radium-with-ez", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          radiumAmount: pack.totalCredits,
+          ezCreditCost: requiredEzCredits,
+          packName: pack.name,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitMessage({
+          type: "success",
+          text: `Successfully purchased ${pack.totalCredits} Radium Credits!`,
+        });
+        fetchCredits();
+        fetchEzCredits();
+      } else {
+        const error = await response.json();
+        setSubmitMessage({
+          type: "error",
+          text: error.error || "Failed to purchase Radium Credits",
+        });
+      }
+    } catch (error) {
+      setSubmitMessage({
+        type: "error",
+        text: "An error occurred while processing payment",
+      });
+    } finally {
+      setPayingWithCredits(false);
     }
   };
 
@@ -214,6 +283,19 @@ export default function CreditsDisplay() {
                     fetchCredits();
                   }}
                 />
+                {ezCredits !== null && ezCredits >= Math.ceil(pack.price) && (
+                  <button
+                    onClick={() => handlePayWithEzCredits(pack)}
+                    disabled={payingWithCredits}
+                    className="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {payingWithCredits ? (
+                      "Processing..."
+                    ) : (
+                      <>💎 Pay with {Math.ceil(pack.price)} EZ Credits</>
+                    )}
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setSelectedPack(pack);
@@ -226,6 +308,19 @@ export default function CreditsDisplay() {
                 >
                   💰 Pay with Crypto
                 </button>
+                {ezCredits !== null && (
+                  <p className="text-xs text-center text-gray-600 mt-1">
+                    Your EZ Credits:{" "}
+                    <strong>{ezCredits.toLocaleString()}</strong>
+                    {ezCredits < Math.ceil(pack.price) && (
+                      <span className="text-red-600 block">
+                        Need{" "}
+                        {(Math.ceil(pack.price) - ezCredits).toLocaleString()}{" "}
+                        more
+                      </span>
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           ))}

@@ -58,7 +58,7 @@ export default function PricingClient({
     if (!hasEnoughCredits || payingWithCredits) return;
 
     const confirmed = confirm(
-      `Pay with ${requiredCredits} Radium Credits?\n\nThis will deduct ${requiredCredits} credits from your balance.`
+      `Pay with ${requiredCredits} EZ Credits?\n\nThis will deduct ${requiredCredits} EZ Credits from your balance.`
     );
 
     if (!confirmed) return;
@@ -66,16 +66,32 @@ export default function PricingClient({
     setPayingWithCredits(true);
 
     try {
-      const response = await fetch("/api/credits/pay-with-credits", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type,
-          amount,
-          planType,
-          creditAmount,
-        }),
-      });
+      let response;
+
+      if (type === "subscription") {
+        // Paying for a subscription with EZ Credits
+        response = await fetch("/api/credits/pay-with-credits", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type,
+            amount,
+            planType,
+            creditAmount,
+          }),
+        });
+      } else {
+        // Buying Radium Credits with EZ Credits
+        response = await fetch("/api/credits/buy-radium-with-ez", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            radiumAmount: creditAmount,
+            ezCreditCost: requiredCredits,
+            packName: packName || "Credit Pack",
+          }),
+        });
+      }
 
       if (response.ok) {
         if (type === "subscription") {
@@ -165,32 +181,31 @@ export default function PricingClient({
           }}
         />
 
-        {/* Pay with Credits Button */}
+        {/* Pay with EZ Credits Button */}
         {hasEnoughCredits && (
           <button
             onClick={handlePayWithCredits}
             disabled={payingWithCredits}
-            className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {payingWithCredits ? (
               "Processing..."
             ) : (
-              <>💎 Pay with {requiredCredits} Credits</>
+              <>💎 Pay with {requiredCredits} EZ Credits</>
             )}
           </button>
         )}
 
-        {/* Show credit balance if logged in */}
+        {/* Show EZ credit balance if logged in */}
         {session?.user && userCredits !== null && (
           <div className="text-center text-sm">
             <span className="text-gray-600">
-              Your Balance: <strong>{userCredits.toLocaleString()}</strong>{" "}
-              credits
+              Your EZ Credits: <strong>{userCredits.toLocaleString()}</strong>
             </span>
             {!hasEnoughCredits && requiredCredits > 0 && (
               <p className="text-red-600 text-xs mt-1">
-                Need {(requiredCredits - userCredits).toLocaleString()} more
-                credits
+                Need {(requiredCredits - userCredits).toLocaleString()} more EZ
+                Credits
               </p>
             )}
           </div>
