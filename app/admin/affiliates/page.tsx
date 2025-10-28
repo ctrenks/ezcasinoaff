@@ -9,8 +9,8 @@ export default async function AdminAffiliatesPage() {
     redirect("/auth/signin");
   }
 
-  // Check if user is super admin (role 0)
-  if (session.user.role !== 0) {
+  // Check if user is super admin (role 5)
+  if (session.user.role !== 5) {
     redirect("/");
   }
 

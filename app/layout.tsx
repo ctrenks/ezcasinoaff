@@ -92,7 +92,7 @@ export default async function WebmasterLayout({
                   {session?.user ? (
                     <>
                       <NotificationBell />
-                      {session.user.role === 0 && (
+                      {session.user.role === 5 && (
                         <>
                           <Link
                             href="/admin/affiliates"

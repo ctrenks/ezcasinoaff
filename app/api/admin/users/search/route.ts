@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const session = await auth();
 
-    // Check if user is super admin (role 0)
+    // Check if user is super admin (role 5)
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       select: { role: true },
     });
 
-    if (!currentUser || currentUser.role !== 0) {
+    if (!currentUser || currentUser.role !== 5) {
       return NextResponse.json(
         { error: "Forbidden - Super admin access required" },
         { status: 403 }
