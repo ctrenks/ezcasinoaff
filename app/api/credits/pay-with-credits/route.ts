@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { createAffiliateCommission } from "@/lib/affiliate-commissions";
+import { SUBSCRIPTION_PLANS } from "@/lib/pricing";
+import { createNotification } from "@/lib/notifications";
 
 export const dynamic = "force-dynamic";
 
@@ -173,6 +175,40 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        // Award annual Radium credits for the subscription
+        const planKey = planType as keyof typeof SUBSCRIPTION_PLANS;
+        const plan = SUBSCRIPTION_PLANS[planKey];
+        const annualRadiumCredits = plan.features.includedCredits * 12; // Award full year upfront
+
+        const radiumCredit = await tx.radiumCredit.upsert({
+          where: { userId: session.user.id },
+          create: {
+            userId: session.user.id,
+            balance: annualRadiumCredits,
+            lifetime: annualRadiumCredits,
+          },
+          update: {
+            balance: {
+              increment: annualRadiumCredits,
+            },
+            lifetime: {
+              increment: annualRadiumCredits,
+            },
+          },
+        });
+
+        // Create Radium transaction record
+        await tx.radiumTransaction.create({
+          data: {
+            userId: session.user.id,
+            creditId: radiumCredit.id,
+            type: "SUBSCRIPTION",
+            amount: annualRadiumCredits,
+            balance: radiumCredit.balance,
+            description: `Annual Radium Credits for ${planType} subscription (${site.name})`,
+          },
+        });
+
         // Create affiliate commission if user was referred
         const user = await tx.user.findUnique({
           where: { id: session.user.id },
@@ -200,7 +236,23 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        return { payment, subscription, creditsUsed: requiredCredits };
+        return {
+          payment,
+          subscription,
+          creditsUsed: requiredCredits,
+          annualRadiumCredits,
+          creditBalance: updatedCredit.balance,
+        };
+      });
+
+      // Send notification to user
+      await createNotification({
+        userId: session.user.id,
+        type: "SYSTEM",
+        title: "Subscription Activated! 🎉",
+        message: `Your ${planType} subscription for ${site.name} is now active. You received ${result.annualRadiumCredits} Radium Credits!`,
+        link: "/profile/credits",
+        icon: "🤖",
       });
 
       return NextResponse.json({

@@ -24,7 +24,7 @@ export const SUBSCRIPTION_PLANS = {
       "Geo restriction ability",
       "Thousands of images",
       "Email support",
-      "10 Radium credits per month",
+      "120 Radium credits (10/mo - awarded annually)",
     ],
   },
   PRO: {
@@ -45,7 +45,7 @@ export const SUBSCRIPTION_PLANS = {
     featureList: [
       "Everything in Basic",
       "Game screenshot images",
-      "25 Radium credits per month",
+      "300 Radium credits (25/mo - awarded annually)",
       "Ability to request features",
       "Priority support",
     ],
@@ -69,7 +69,7 @@ export const SUBSCRIPTION_PLANS = {
     featureList: [
       "Everything in Pro",
       "Unified bonus code feed",
-      "50 Radium credits per month",
+      "600 Radium credits (50/mo - awarded annually)",
       "Priority + phone support",
     ],
   },

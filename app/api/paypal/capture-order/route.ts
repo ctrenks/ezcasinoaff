@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { client, paypal } from "@/lib/paypal";
 import { createAffiliateCommission } from "@/lib/affiliate-commissions";
 import { redirect } from "next/navigation";
+import { SUBSCRIPTION_PLANS } from "@/lib/pricing";
+import { createNotification } from "@/lib/notifications";
 
 // GET /api/paypal/capture-order - Capture a PayPal order after user approval
 export async function GET(req: NextRequest) {
@@ -81,8 +83,13 @@ export async function GET(req: NextRequest) {
         : null;
 
       if (existingSite) {
+        const planType = customData.planType || "BASIC";
+        const planKey = planType as keyof typeof SUBSCRIPTION_PLANS;
+        const plan = SUBSCRIPTION_PLANS[planKey];
+        const annualRadiumCredits = plan.features.includedCredits * 12; // Award full year upfront
+
         if (existingSite.subscription) {
-          // Update existing subscription
+          // Update existing subscription (renewal)
           await prisma.subscription.update({
             where: { id: existingSite.subscription.id },
             data: {
@@ -90,6 +97,46 @@ export async function GET(req: NextRequest) {
               lastPaymentDate: new Date(),
               lastPaymentAmount: paymentAmount,
             },
+          });
+
+          // Award annual Radium credits for renewal
+          const radiumCredit = await prisma.radiumCredit.upsert({
+            where: { userId: session.user.id },
+            create: {
+              userId: session.user.id,
+              balance: annualRadiumCredits,
+              lifetime: annualRadiumCredits,
+            },
+            update: {
+              balance: {
+                increment: annualRadiumCredits,
+              },
+              lifetime: {
+                increment: annualRadiumCredits,
+              },
+            },
+          });
+
+          // Create transaction record
+          await prisma.radiumTransaction.create({
+            data: {
+              userId: session.user.id,
+              creditId: radiumCredit.id,
+              type: "SUBSCRIPTION",
+              amount: annualRadiumCredits,
+              balance: radiumCredit.balance,
+              description: `Annual Radium Credits for ${planType} subscription renewal (${existingSite.name})`,
+            },
+          });
+
+          // Notify user
+          await createNotification({
+            userId: session.user.id,
+            type: "SYSTEM",
+            title: "Subscription Renewed! 🎉",
+            message: `Your ${planType} subscription for ${existingSite.name} has been renewed. You received ${annualRadiumCredits} Radium Credits!`,
+            link: "/profile/credits",
+            icon: "🤖",
           });
         } else {
           // Create new subscription
@@ -101,7 +148,7 @@ export async function GET(req: NextRequest) {
             data: {
               userId: session.user.id,
               siteId: existingSite.id,
-              plan: customData.planType || "BASIC",
+              plan: planType,
               status: "ACTIVE",
               amount: paymentAmount,
               monthlyRate: paymentAmount / 12,
@@ -121,6 +168,46 @@ export async function GET(req: NextRequest) {
               status: "ACTIVE",
             },
           });
+
+          // Award annual Radium credits for new subscription
+          const radiumCredit = await prisma.radiumCredit.upsert({
+            where: { userId: session.user.id },
+            create: {
+              userId: session.user.id,
+              balance: annualRadiumCredits,
+              lifetime: annualRadiumCredits,
+            },
+            update: {
+              balance: {
+                increment: annualRadiumCredits,
+              },
+              lifetime: {
+                increment: annualRadiumCredits,
+              },
+            },
+          });
+
+          // Create transaction record
+          await prisma.radiumTransaction.create({
+            data: {
+              userId: session.user.id,
+              creditId: radiumCredit.id,
+              type: "SUBSCRIPTION",
+              amount: annualRadiumCredits,
+              balance: radiumCredit.balance,
+              description: `Annual Radium Credits for ${planType} subscription (${existingSite.name})`,
+            },
+          });
+
+          // Notify user
+          await createNotification({
+            userId: session.user.id,
+            type: "SYSTEM",
+            title: "Subscription Activated! 🎉",
+            message: `Your ${planType} subscription for ${existingSite.name} is now active. You received ${annualRadiumCredits} Radium Credits!`,
+            link: "/profile/credits",
+            icon: "🤖",
+          });
         }
       }
 
@@ -135,7 +222,7 @@ export async function GET(req: NextRequest) {
     } else if (customData.type === "credits") {
       // Add credits to user account based on payment type
       const creditAmount = customData.creditAmount || 0;
-      
+
       // Check payment type to determine which credit system to use
       if (payment.type === "USER_CREDITS") {
         // Add User Credits (EZ Credits - payment currency)
