@@ -14,18 +14,72 @@ export default function PluginUploadForm() {
     text: string;
   } | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
-
-      // Try to extract version from filename (e.g., radium-sync-1.2.3.zip)
-      const match = selectedFile.name.match(/(\d+\.\d+\.\d+)/);
-      if (match && !version) {
-        setVersion(match[1]);
-      }
-
       setMessage(null);
+      setLoading(true);
+
+      try {
+        // Analyze ZIP file to extract version and changelog
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        const response = await fetch("/api/admin/plugin-upload/analyze", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Auto-fill version if found
+          if (data.version && !version) {
+            setVersion(data.version);
+          }
+
+          // Auto-fill description if found
+          if (data.description && !description) {
+            setDescription(data.description);
+          }
+
+          // Auto-fill changelog if found
+          if (data.changelog && !changelog) {
+            setChangelog(data.changelog);
+          }
+
+          if (data.version || data.changelog) {
+            setMessage({
+              type: "success",
+              text: `Auto-detected: ${
+                data.version ? `Version ${data.version}` : ""
+              }${data.version && data.changelog ? ", " : ""}${
+                data.changelog ? "Changelog extracted" : ""
+              }`,
+            });
+          }
+        } else {
+          // Fallback: Try to extract version from filename
+          const match = selectedFile.name.match(/(\d+\.\d+\.\d+)/);
+          if (match && !version) {
+            setVersion(match[1]);
+            setMessage({
+              type: "success",
+              text: `Version detected from filename: ${match[1]}`,
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error analyzing plugin:", error);
+        // Fallback: Try to extract version from filename
+        const match = selectedFile.name.match(/(\d+\.\d+\.\d+)/);
+        if (match && !version) {
+          setVersion(match[1]);
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

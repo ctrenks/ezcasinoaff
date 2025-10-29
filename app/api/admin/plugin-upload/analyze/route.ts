@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { put } from "@vercel/blob";
 import AdmZip from "adm-zip";
 
+// POST /api/admin/plugin-upload/analyze - Analyze ZIP file to extract version and changelog
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
@@ -27,9 +27,6 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    let version = formData.get("version") as string;
-    let description = formData.get("description") as string;
-    let changelog = formData.get("changelog") as string;
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -38,6 +35,10 @@ export async function POST(req: NextRequest) {
     // Convert file to buffer for ZIP processing
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
+
+    let version = "";
+    let description = "";
+    let changelog = "";
 
     try {
       // Extract version and changelog from ZIP
@@ -62,41 +63,43 @@ export async function POST(req: NextRequest) {
           // Check if this is the main plugin file (has Plugin Name header)
           if (content.includes("Plugin Name:")) {
             pluginFileContent = content;
+            break; // Found the main file
           }
         }
+      }
+
+      // Second pass for readme/changelog
+      for (const entry of zipEntries) {
+        const fileName = entry.entryName.toLowerCase();
 
         // Look for readme or changelog files
         if (fileName.includes("readme.txt") || fileName.includes("readme.md")) {
           readmeContent = entry.getData().toString("utf8");
+          break;
         } else if (
           fileName.includes("changelog") &&
           (fileName.endsWith(".txt") || fileName.endsWith(".md"))
         ) {
-          if (!readmeContent) {
-            // Prefer readme, but use changelog if no readme
-            readmeContent = entry.getData().toString("utf8");
-          }
+          readmeContent = entry.getData().toString("utf8");
         }
       }
 
-      // Extract version from plugin header if not provided
-      if (!version && pluginFileContent) {
+      // Extract version from plugin header
+      if (pluginFileContent) {
         const versionMatch = pluginFileContent.match(/Version:\s*([\d.]+)/i);
         if (versionMatch) {
           version = versionMatch[1];
         }
-      }
 
-      // Extract description from plugin header if not provided
-      if (!description && pluginFileContent) {
+        // Extract description from plugin header (short description)
         const descMatch = pluginFileContent.match(/Description:\s*([^\n]+)/i);
         if (descMatch) {
           description = descMatch[1].trim();
         }
       }
 
-      // Extract changelog from readme if not provided
-      if (!changelog && readmeContent) {
+      // Extract changelog from readme
+      if (readmeContent) {
         // Try to extract the latest version's changelog
         const changelogSection = readmeContent.match(
           /== Changelog ==\s*([\s\S]*?)(?:\n==|$)/i
@@ -104,73 +107,51 @@ export async function POST(req: NextRequest) {
         if (changelogSection) {
           const fullChangelog = changelogSection[1].trim();
 
-          // Get just the latest version's changes (first section)
-          const latestChanges = fullChangelog.split(/\n= \d+\.\d+/)[0].trim();
+          // Get just the latest version's changes (first section up to next version)
+          const lines = fullChangelog.split("\n");
+          const changelogLines = [];
+          let foundVersion = false;
 
-          if (latestChanges) {
-            changelog = latestChanges;
+          for (const line of lines) {
+            // Stop at next version header
+            if (line.match(/^=\s*\d+\.\d+/) && foundVersion) {
+              break;
+            }
+
+            if (line.match(/^=\s*\d+\.\d+/)) {
+              foundVersion = true;
+              continue; // Skip the version header line
+            }
+
+            if (foundVersion && line.trim()) {
+              changelogLines.push(line);
+            }
+          }
+
+          if (changelogLines.length > 0) {
+            changelog = changelogLines.join("\n").trim();
           }
         }
       }
+
+      return NextResponse.json({
+        success: true,
+        version: version || null,
+        description: description || null,
+        changelog: changelog || null,
+      });
     } catch (zipError) {
       console.error("Error parsing ZIP file:", zipError);
-      // Continue without auto-extracted data
-    }
-
-    if (!version) {
       return NextResponse.json(
         {
-          error: "Version number required (could not auto-detect from plugin)",
+          error:
+            "Failed to parse ZIP file. Ensure it's a valid WordPress plugin.",
         },
         { status: 400 }
       );
     }
-
-    // Validate version format (X.Y.Z)
-    if (!/^\d+\.\d+\.\d+$/.test(version)) {
-      return NextResponse.json(
-        { error: "Invalid version format. Use X.Y.Z (e.g., 1.0.0)" },
-        { status: 400 }
-      );
-    }
-
-    // Check if version already exists
-    const existingVersion = await prisma.pluginVersion.findUnique({
-      where: { version },
-    });
-
-    if (existingVersion) {
-      return NextResponse.json(
-        { error: `Version ${version} already exists` },
-        { status: 400 }
-      );
-    }
-
-    // Upload file to Vercel Blob
-    const blob = await put(`radium-plugin/${file.name}`, file, {
-      access: "public",
-      addRandomSuffix: false,
-    });
-
-    // Create database record
-    const pluginVersion = await prisma.pluginVersion.create({
-      data: {
-        version,
-        fileName: file.name,
-        fileSize: file.size,
-        filePath: blob.url,
-        description: description || null,
-        changelog: changelog || null,
-        uploadedBy: session.user.id,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      version: pluginVersion,
-    });
   } catch (error) {
-    console.error("Plugin upload error:", error);
+    console.error("Plugin analysis error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
