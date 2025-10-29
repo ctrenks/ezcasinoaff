@@ -422,6 +422,7 @@ enum RadiumTransactionType {
   REFUND
   ADMIN_ADJUST
   BONUS
+  SUBSCRIPTION
 }
 
 model RadiumUsage {
