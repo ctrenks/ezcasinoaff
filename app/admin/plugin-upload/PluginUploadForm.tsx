@@ -9,6 +9,7 @@ export default function PluginUploadForm() {
   const [description, setDescription] = useState("");
   const [changelog, setChangelog] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -187,6 +188,11 @@ export default function PluginUploadForm() {
                 <p className="text-sm font-medium text-purple-600 mt-2">
                   Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)}{" "}
                   MB)
+                </p>
+              )}
+              {loading && (
+                <p className="text-sm font-medium text-blue-600 mt-2">
+                  🔍 Analyzing plugin...
                 </p>
               )}
             </div>
