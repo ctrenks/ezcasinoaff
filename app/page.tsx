@@ -29,22 +29,22 @@ export default async function WebmasterDashboard() {
               Making casino affiliate marketing easy - Your gateway to casino
               affiliate programs and gaming content
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/signin"
-                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition text-center"
               >
                 Get Started
               </Link>
               <Link
                 href="/pricing"
-                className="bg-white hover:bg-gray-50 text-purple-600 border-2 border-purple-600 px-8 py-3 rounded-lg font-semibold transition"
+                className="bg-white hover:bg-gray-50 text-purple-600 border-2 border-purple-600 px-8 py-3 rounded-lg font-semibold transition text-center"
               >
                 View Pricing
               </Link>
               <Link
                 href="/casinos"
-                className="bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-300 px-8 py-3 rounded-lg font-semibold transition"
+                className="bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-300 px-8 py-3 rounded-lg font-semibold transition text-center"
               >
                 Browse Casinos
               </Link>
