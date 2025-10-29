@@ -48,6 +48,9 @@ model User {
   radiumTransactions RadiumTransaction[]
   radiumUsage       RadiumUsage[]
 
+  // Plugin uploads
+  pluginVersions    PluginVersion[]
+
   // Forum relations
   forumTopics        ez_forum_topics[]
   forumPosts         ez_forum_posts[]
@@ -116,6 +119,24 @@ model Authenticator {
   user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, credentialID])
+}
+
+model PluginVersion {
+  id          String   @id @default(cuid())
+  version     String   @unique
+  fileName    String
+  fileSize    Int
+  filePath    String
+  description String?  // Short description (e.g., "Bug fix", "Major update")
+  changelog   String?  @db.Text
+  uploadedBy  String
+  uploadedAt  DateTime @default(now())
+  downloads   Int      @default(0)
+
+  uploader    User     @relation(fields: [uploadedBy], references: [id])
+
+  @@index([version])
+  @@index([uploadedAt])
 }
 
 model Terms {

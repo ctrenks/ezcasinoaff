@@ -175,6 +175,13 @@ export default async function AdminDashboard() {
       icon: "💬",
       color: "bg-green-100 text-green-700 border-green-300",
     },
+    {
+      title: "Plugin Upload",
+      description: "Upload new Radium WordPress plugin versions",
+      href: "/admin/plugin-upload",
+      icon: "🔌",
+      color: "bg-cyan-100 text-cyan-700 border-cyan-300",
+    },
   ];
 
   return (
