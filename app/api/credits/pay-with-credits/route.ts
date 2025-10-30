@@ -133,6 +133,11 @@ export async function POST(req: NextRequest) {
 
         const monthlyRate = amount / 12;
 
+        // Get plan details for feature flags and credits
+        const planKey = planType as keyof typeof SUBSCRIPTION_PLANS;
+        const plan = SUBSCRIPTION_PLANS[planKey];
+        const annualRadiumCredits = plan.features.includedCredits * 12; // Award full year upfront
+
         // Create subscription
         const subscription = await tx.subscription.create({
           data: {
@@ -178,9 +183,6 @@ export async function POST(req: NextRequest) {
         });
 
         // Award annual Radium credits for the subscription
-        const planKey = planType as keyof typeof SUBSCRIPTION_PLANS;
-        const plan = SUBSCRIPTION_PLANS[planKey];
-        const annualRadiumCredits = plan.features.includedCredits * 12; // Award full year upfront
 
         const radiumCredit = await tx.radiumCredit.upsert({
           where: { userId: session.user.id },
