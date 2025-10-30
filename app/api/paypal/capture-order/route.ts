@@ -89,13 +89,25 @@ export async function GET(req: NextRequest) {
         const annualRadiumCredits = plan.features.includedCredits * 12; // Award full year upfront
 
         if (existingSite.subscription) {
-          // Update existing subscription (renewal)
+          // Update existing subscription (renewal/upgrade)
           await prisma.subscription.update({
             where: { id: existingSite.subscription.id },
             data: {
+              plan: planType, // Update plan in case of upgrade
               status: "ACTIVE",
               lastPaymentDate: new Date(),
               lastPaymentAmount: paymentAmount,
+            },
+          });
+
+          // Update site feature flags based on plan
+          await prisma.site.update({
+            where: { id: existingSite.id },
+            data: {
+              isActive: true,
+              status: "ACTIVE",
+              hasGameScreenshots: plan.features.gameScreenshots,
+              hasBonusCodeFeed: plan.features.bonusCodeFeed,
             },
           });
 
@@ -160,12 +172,14 @@ export async function GET(req: NextRequest) {
             },
           });
 
-          // Activate the site
+          // Activate the site and set feature flags based on plan
           await prisma.site.update({
             where: { id: existingSite.id },
             data: {
               isActive: true,
               status: "ACTIVE",
+              hasGameScreenshots: plan.features.gameScreenshots,
+              hasBonusCodeFeed: plan.features.bonusCodeFeed,
             },
           });
 

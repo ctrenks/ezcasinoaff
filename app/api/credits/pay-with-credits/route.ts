@@ -153,13 +153,15 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Update site
+        // Update site and set feature flags based on plan
         await tx.site.update({
           where: { id: site.id },
           data: {
             subscriptionId: subscription.id,
             isActive: true,
             status: "ACTIVE",
+            hasGameScreenshots: plan.features.gameScreenshots,
+            hasBonusCodeFeed: plan.features.bonusCodeFeed,
           },
         });
 
