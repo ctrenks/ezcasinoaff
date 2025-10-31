@@ -162,14 +162,30 @@ export default async function WebmasterLayout({
 
             {/* Footer */}
             <footer className="bg-gray-900 text-white py-8">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <p className="text-gray-400">
-                  © {new Date().getFullYear()} EZ Casino Affiliates. All rights
-                  reserved.
-                </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Making casino affiliate marketing easy
-                </p>
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="flex space-x-6 text-sm">
+                    <Link
+                      href="/terms"
+                      className="text-gray-400 hover:text-white transition"
+                    >
+                      Terms of Service
+                    </Link>
+                    <Link
+                      href="/privacy"
+                      className="text-gray-400 hover:text-white transition"
+                    >
+                      Privacy Policy
+                    </Link>
+                  </div>
+                  <p className="text-gray-400">
+                    © {new Date().getFullYear()} EZ Casino Affiliates. All
+                    rights reserved.
+                  </p>
+                  <p className="text-gray-500 text-sm">
+                    Making casino affiliate marketing easy
+                  </p>
+                </div>
               </div>
             </footer>
           </div>
