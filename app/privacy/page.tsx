@@ -28,10 +28,10 @@ export default function PrivacyPage() {
               1. Introduction
             </h2>
             <p className="text-gray-700 mb-4">
-              EZ Casino Affiliates ("we", "our", or "us") is committed to
-              protecting your privacy. This Privacy Policy explains how we
-              collect, use, disclose, and safeguard your information when you
-              use our Service.
+              EZ Casino Affiliates (&quot;we&quot;, &quot;our&quot;, or
+              &quot;us&quot;) is committed to protecting your privacy. This
+              Privacy Policy explains how we collect, use, disclose, and
+              safeguard your information when you use our Service.
             </p>
             <p className="text-gray-700 mb-4">
               Please read this privacy policy carefully. If you do not agree
@@ -336,8 +336,8 @@ export default function PrivacyPage() {
             <p className="text-gray-700 mb-4">
               We may update this Privacy Policy from time to time. We will
               notify you of any changes by posting the new Privacy Policy on
-              this page and updating the "Last Updated" date. Significant
-              changes will be communicated via email.
+              this page and updating the &quot;Last Updated&quot; date.
+              Significant changes will be communicated via email.
             </p>
           </section>
 

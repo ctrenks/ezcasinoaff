@@ -28,10 +28,10 @@ export default function TermsPage() {
               1. Acceptance of Terms
             </h2>
             <p className="text-gray-700 mb-4">
-              By accessing and using EZ Casino Affiliates ("Service"), you
-              accept and agree to be bound by the terms and provision of this
-              agreement. If you do not agree to these terms, please do not use
-              our Service.
+              By accessing and using EZ Casino Affiliates (&quot;Service&quot;),
+              you accept and agree to be bound by the terms and provision of
+              this agreement. If you do not agree to these terms, please do not
+              use our Service.
             </p>
           </section>
 
@@ -167,10 +167,11 @@ export default function TermsPage() {
               10. Disclaimer of Warranties
             </h2>
             <p className="text-gray-700 mb-4">
-              The Service is provided "as is" and "as available" without
-              warranties of any kind, either express or implied, including but
-              not limited to warranties of merchantability, fitness for a
-              particular purpose, or non-infringement.
+              The Service is provided &quot;as is&quot; and &quot;as
+              available&quot; without warranties of any kind, either express or
+              implied, including but not limited to warranties of
+              merchantability, fitness for a particular purpose, or
+              non-infringement.
             </p>
           </section>
 
