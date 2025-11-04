@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 
 export async function GET(
   req: NextRequest,
@@ -12,7 +11,10 @@ export async function GET(
 
     // Require authentication
     if (!session?.user?.id) {
-      return redirect("/auth/signin");
+      return NextResponse.json(
+        { error: "Unauthorized - Please sign in" },
+        { status: 401 }
+      );
     }
 
     const { id } = params;
@@ -39,8 +41,8 @@ export async function GET(
       },
     });
 
-    // Redirect to the blob URL for download
-    return redirect(version.filePath);
+    // Redirect to the blob URL for download using NextResponse
+    return NextResponse.redirect(version.filePath);
   } catch (error) {
     console.error("Plugin download error:", error);
     return NextResponse.json(
@@ -49,4 +51,3 @@ export async function GET(
     );
   }
 }
-
