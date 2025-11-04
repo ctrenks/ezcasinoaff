@@ -182,6 +182,13 @@ export default async function AdminDashboard() {
       icon: "🔌",
       color: "bg-cyan-100 text-cyan-700 border-cyan-300",
     },
+    {
+      title: "Theme Upload",
+      description: "Upload new WordPress theme versions",
+      href: "/admin/theme-upload",
+      icon: "🎨",
+      color: "bg-pink-100 text-pink-700 border-pink-300",
+    },
   ];
 
   return (

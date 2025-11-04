@@ -35,7 +35,7 @@ export default async function WPPluginPage() {
               automated updates, and powerful features that go far beyond
               standard casino plugins.
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               {session?.user ? (
                 <>
                   <Link
@@ -43,6 +43,12 @@ export default async function WPPluginPage() {
                     className="inline-block bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
                   >
                     Download Plugin
+                  </Link>
+                  <Link
+                    href="/wp-themes"
+                    className="inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition"
+                  >
+                    🎨 Download Themes
                   </Link>
                   <Link
                     href="/profile/sites"
