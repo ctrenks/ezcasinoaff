@@ -12,6 +12,7 @@ declare global {
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -98,6 +99,9 @@ export default function ContactForm() {
         throw new Error(data.error || "Failed to send message");
       }
 
+      // Show success state
+      setSuccess(true);
+
       toast.success(
         "Message sent successfully! We'll get back to you within 24 hours.",
         { duration: 5000 }
@@ -112,8 +116,10 @@ export default function ContactForm() {
         phone: "",
       });
 
-      // Stay on page instead of redirecting
-      // User can navigate away when ready
+      // Hide success message after 10 seconds
+      setTimeout(() => {
+        setSuccess(false);
+      }, 10000);
     } catch (error) {
       console.error("Contact form error:", error);
       toast.error(
@@ -126,6 +132,34 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {success && (
+        <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4 animate-pulse">
+          <div className="flex items-center">
+            <svg
+              className="h-6 w-6 text-green-500 mr-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div>
+              <p className="font-semibold text-green-900">
+                ✅ Message Sent Successfully!
+              </p>
+              <p className="text-sm text-green-700">
+                We&apos;ll get back to you within 24 hours.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label

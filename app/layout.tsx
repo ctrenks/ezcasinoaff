@@ -7,6 +7,7 @@ import Navigation from "@/components/Navigation";
 import NotificationBell from "@/components/NotificationBell";
 import ReferralTracker from "@/components/ReferralTracker";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default async function WebmasterLayout({
     <html lang="en">
       <body>
         <SessionProvider session={session}>
+          <Toaster position="top-right" />
           <ReferralTracker />
           <div className="webmaster-portal">
             {/* Header */}
