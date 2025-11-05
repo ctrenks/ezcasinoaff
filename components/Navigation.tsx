@@ -198,6 +198,13 @@ export default function Navigation({ session }: NavigationProps) {
                 >
                   Pricing
                 </Link>
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block text-white text-xl py-3 px-4 rounded-lg hover:bg-purple-800 transition"
+                >
+                  Contact
+                </Link>
 
                 {session?.user ? (
                   <>

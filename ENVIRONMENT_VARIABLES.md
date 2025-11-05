@@ -77,6 +77,16 @@ If you're getting "Verification" errors when clicking email links:
 4. Email verification links expire after some time - request a new link if needed
 5. Verification tokens can only be used once - request a new link if you already clicked it
 
+## Google reCAPTCHA Enterprise (Contact Form)
+
+```env
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6LeQTAMsAAAAANPW7z_vSrmq_mvf-t7zlX9ol8R6
+RECAPTCHA_PROJECT_ID=slot-bot-captcha
+GOOGLE_APPLICATION_CREDENTIALS_JSON={"type":"service_account",...}
+```
+
+**Note**: See `RECAPTCHA_ENTERPRISE_SETUP.md` for detailed setup instructions.
+
 ## Setting Environment Variables in Vercel
 
 1. Go to your Vercel Dashboard
@@ -87,6 +97,9 @@ If you're getting "Verification" errors when clicking email links:
    - `NEXTAUTH_URL=https://www.ezcasinoaff.com` (or `AUTH_URL`)
    - `DATABASE_PRISMA_URL`
    - `RESEND_API_KEY`
+   - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY`
+   - `RECAPTCHA_PROJECT_ID`
+   - `GOOGLE_APPLICATION_CREDENTIALS_JSON`
 5. Select which environments (Production, Preview, Development)
 6. Click "Save"
 7. **Redeploy your application** for changes to take effect

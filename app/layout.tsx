@@ -79,6 +79,12 @@ export default async function WebmasterLayout({
                     >
                       Pricing
                     </Link>
+                    <Link
+                      href="/contact"
+                      className="hover:text-purple-300 transition"
+                    >
+                      Contact
+                    </Link>
                   </nav>
 
                   {/* Mobile hamburger */}
@@ -165,6 +171,12 @@ export default async function WebmasterLayout({
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col items-center space-y-4">
                   <div className="flex space-x-6 text-sm">
+                    <Link
+                      href="/contact"
+                      className="text-gray-400 hover:text-white transition"
+                    >
+                      Contact Us
+                    </Link>
                     <Link
                       href="/terms"
                       className="text-gray-400 hover:text-white transition"
