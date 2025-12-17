@@ -25,12 +25,15 @@ export default async function AdminDashboard() {
     totalCommissions,
     totalCreditsBalance,
   ] = await Promise.all([
-    // Total users
-    prisma.user.count(),
+    // Total users (only ezcasino users)
+    prisma.user.count({
+      where: { ezcasino: true },
+    }),
 
-    // New users this month
+    // New users this month (only ezcasino users)
     prisma.user.count({
       where: {
+        ezcasino: true,
         createdAt: {
           gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         },
