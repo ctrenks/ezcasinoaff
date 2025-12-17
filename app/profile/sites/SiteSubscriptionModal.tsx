@@ -74,7 +74,7 @@ export default function SiteSubscriptionModal({
     userCredits !== null && userCredits >= requiredCredits;
 
   const handleCryptoClick = (plan: any) => {
-    setSelectedPlan(plan);
+    setSelectedPlan(plan.id);
     setShowCryptoModal(true);
     setSubmitMessage(null);
     setMessage("");
