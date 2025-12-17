@@ -151,6 +151,13 @@ export default async function AdminDashboard() {
       color: "bg-blue-100 text-blue-700 border-blue-300",
     },
     {
+      title: "Subscription Management",
+      description: "View and manage subscriptions, upgrade plans, extend dates",
+      href: "/admin/subscriptions",
+      icon: "💳",
+      color: "bg-green-100 text-green-700 border-green-300",
+    },
+    {
       title: "Manage Affiliates",
       description: "View and manage user commission rates",
       href: "/admin/affiliates",
