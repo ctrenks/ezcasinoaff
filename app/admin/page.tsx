@@ -144,6 +144,13 @@ export default async function AdminDashboard() {
 
   const adminSections = [
     {
+      title: "User Management",
+      description: "View all EZ users, sites, API keys, and account details",
+      href: "/admin/users",
+      icon: "👥",
+      color: "bg-blue-100 text-blue-700 border-blue-300",
+    },
+    {
       title: "Manage Affiliates",
       description: "View and manage user commission rates",
       href: "/admin/affiliates",
